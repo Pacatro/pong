@@ -31,22 +31,24 @@ fn spawn_ball(
             transform: Transform::from_translation(Vec3::ZERO),
             ..default()
         },
-        RigidBody::Dynamic,
-        Collider::ball(BALL_RADIUS),
-        GravityScale(0.0),
-        Restitution::coefficient(1.0),
-        // ActiveEvents::COLLISION_EVENTS,
-        // ActiveEvents::CONTACT_FORCE_EVENTS,
         KinematicCharacterController {
             offset: CharacterLength::Absolute(0.01),
             ..default()
         },
+        RigidBody::Dynamic,
+        GravityScale(0.0),
+        Collider::ball(BALL_RADIUS),
+        ExternalForce::default(),
         Ball
     ));
 }
 
 fn move_ball(
-    mut query: Query<&mut KinematicCharacterController, With<Ball>>,
+    mut query: Query<&mut ExternalForce, With<Ball>>,
+    query_ball: Query<Entity, With<Ball>>,
+    query_player: Query<Entity, With<Player>>,
+    rapier_context: Res<RapierContext>,
+    time: Res<Time>,
 ) {
     todo!()
 }
