@@ -1,5 +1,8 @@
 use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
+use rand::prelude::*;
+
+use crate::player::Player;
 
 const BALL_RADIUS: f32 = 10.0;
 
@@ -8,12 +11,13 @@ pub struct BallPlugin;
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, spawn_ball);
+            .add_systems(Startup, spawn_ball)
+            .add_systems(Update, (move_ball, show_ball_info));
     }
 }
 
 #[derive(Debug, Component)]
-struct Ball;
+pub struct Ball;
 
 fn spawn_ball(
     mut commands: Commands,
@@ -27,9 +31,36 @@ fn spawn_ball(
             transform: Transform::from_translation(Vec3::ZERO),
             ..default()
         },
-        RigidBody::KinematicPositionBased,
+        RigidBody::Dynamic,
         Collider::ball(BALL_RADIUS),
-        KinematicCharacterController::default(),
+        GravityScale(0.0),
+        Restitution::coefficient(1.0),
+        // ActiveEvents::COLLISION_EVENTS,
+        // ActiveEvents::CONTACT_FORCE_EVENTS,
+        KinematicCharacterController {
+            offset: CharacterLength::Absolute(0.01),
+            ..default()
+        },
         Ball
     ));
+}
+
+fn move_ball(
+    mut query: Query<&mut KinematicCharacterController, With<Ball>>,
+) {
+    todo!()
+}
+
+fn show_ball_info(
+    rapier_context: Res<RapierContext>,
+    query_ball: Query<Entity, With<Ball>>,
+    query_player: Query<Entity, With<Player>>
+) {
+    for player in query_player.iter() {
+        for ball in query_ball.iter() {
+            if rapier_context.contact_pair(player, ball).is_some() {
+                println!("SAN CHOCAO")
+            }
+        }
+    }
 }

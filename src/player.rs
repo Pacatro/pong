@@ -12,12 +12,12 @@ impl Plugin for PlayersPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(Startup, spawn_players)
-            .add_systems(Update, (player_movement, player_info));
+            .add_systems(Update, player_movement);
     }
 }
 
 #[derive(Debug, Component)]
-struct Player;
+pub struct Player;
 
 fn spawn_players(
     mut commands: Commands,
@@ -31,7 +31,6 @@ fn spawn_players(
             transform: Transform::from_translation(PLAYER1_TRANSLATION),
             ..default()
         },
-        RigidBody::KinematicPositionBased,
         Collider::cuboid(PLAYER_X_LENGTH/2.0, PLAYER_Y_LENGTH/2.0),
         KinematicCharacterController::default(),
         Player
@@ -44,7 +43,7 @@ fn spawn_players(
             transform: Transform::from_translation(PLAYER2_TRANSLATION),
             ..default()
         },
-        RigidBody::KinematicPositionBased,
+        RigidBody::Fixed,
         Collider::cuboid(PLAYER_X_LENGTH/2.0, PLAYER_Y_LENGTH/2.0),
         KinematicCharacterController::default(),
         Player
@@ -68,8 +67,8 @@ fn player_movement(
     }
 }
 
-fn player_info(controllers: Query<(Entity, &KinematicCharacterControllerOutput), With<Player>>) {
-    for (entity, output) in controllers.iter() {
-        println!("Entity {:?}: {:?}", entity, output.effective_translation);
-    }
-}
+// fn player_info(controllers: Query<(Entity, &KinematicCharacterControllerOutput), With<Player>>) {
+//     for (entity, output) in controllers.iter() {
+//         println!("Entity {:?}: {:?}", entity, output.effective_translation);
+//     }
+// }

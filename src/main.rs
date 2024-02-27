@@ -5,6 +5,7 @@ mod limits;
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 use camera::CameraPlugin;
 use limits::LimitsPlugin;
@@ -14,11 +15,12 @@ use ball::BallPlugin;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugins(WorldInspectorPlugin::new())
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugins(RapierDebugRenderPlugin::default())
         .add_plugins(CameraPlugin)
         .add_plugins(LimitsPlugin)
         .add_plugins(PlayersPlugin)
         .add_plugins(BallPlugin)
-        .run()
+        .run();
 }
