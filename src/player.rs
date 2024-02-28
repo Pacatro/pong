@@ -32,6 +32,8 @@ fn spawn_players(
             ..default()
         },
         Collider::cuboid(PLAYER_X_LENGTH/2.0, PLAYER_Y_LENGTH/2.0),
+        Friction::coefficient(0.0),
+        Restitution::coefficient(1.0),
         KinematicCharacterController::default(),
         Player
     ));
@@ -45,6 +47,8 @@ fn spawn_players(
         },
         RigidBody::Fixed,
         Collider::cuboid(PLAYER_X_LENGTH/2.0, PLAYER_Y_LENGTH/2.0),
+        Friction::coefficient(0.0),
+        Restitution::coefficient(1.0),
         KinematicCharacterController::default(),
         Player
     ));

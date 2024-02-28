@@ -4,7 +4,8 @@ use rand::prelude::*;
 
 use crate::player::Player;
 
-const BALL_RADIUS: f32 = 10.0;
+const BALL_RADIUS: f32 = 25.0;
+const INITIAL_BALL_VELOCITY: f32 = 300.0;
 
 pub struct BallPlugin;
 
@@ -12,7 +13,8 @@ impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(Startup, spawn_ball)
-            .add_systems(Update, (move_ball, show_ball_info));
+            .add_systems(PostStartup, move_ball)
+            .add_systems(Update, increase_ball_velocity);
     }
 }
 
@@ -35,34 +37,47 @@ fn spawn_ball(
             offset: CharacterLength::Absolute(0.01),
             ..default()
         },
-        RigidBody::Dynamic,
-        GravityScale(0.0),
-        Collider::ball(BALL_RADIUS),
-        ExternalForce::default(),
         Ball
-    ));
+    ))
+        .insert(RigidBody::Dynamic)
+        .insert(Velocity::zero())
+        .insert(Collider::ball(BALL_RADIUS))
+        .insert(GravityScale(0.0))
+        .insert(Friction::coefficient(0.0))
+        .insert(Restitution::coefficient(1.0))
+        .insert(ExternalImpulse::default())
+        .insert(Ccd::enabled());
 }
 
 fn move_ball(
-    mut query: Query<&mut ExternalForce, With<Ball>>,
-    query_ball: Query<Entity, With<Ball>>,
-    query_player: Query<Entity, With<Player>>,
-    rapier_context: Res<RapierContext>,
-    time: Res<Time>,
+    mut query: Query<&mut Velocity, With<Ball>>
 ) {
-    todo!()
+    let mut velocity = query.single_mut();
+
+    let rand_x: f32 = if rand::thread_rng().gen_range(-1..=1) == 0 { 1.0 } else { -1.0 };
+    let rand_y: f32 = if rand::thread_rng().gen_range(-1..=1) == 0 { 1.0 } else { -1.0 };
+
+    velocity.linvel = Vec2::new(rand_x, rand_y).normalize() * INITIAL_BALL_VELOCITY;
+
 }
 
-fn show_ball_info(
+fn increase_ball_velocity(
+    mut query_ball: Query<(Entity, &mut Velocity), With<Ball>>,
+    query_player: Query<Entity, With<Player>>,
     rapier_context: Res<RapierContext>,
-    query_ball: Query<Entity, With<Ball>>,
-    query_player: Query<Entity, With<Player>>
 ) {
+    let (ball, mut velocity) = query_ball.single_mut();
+    
+    let mut velocity_x: f32 = velocity.linvel.x;
+    let mut velocity_y: f32 = velocity.linvel.y;
+
     for player in query_player.iter() {
-        for ball in query_ball.iter() {
-            if rapier_context.contact_pair(player, ball).is_some() {
-                println!("SAN CHOCAO")
-            }
+        if rapier_context.contact_pair(player, ball).is_some() {
+            velocity_x += 100.0;
+            velocity_y += 100.0;
+            velocity.linvel = Vec2::new(velocity_x, velocity_y);
         }
     }
+
+    println!("{velocity:?}")
 }

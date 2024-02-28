@@ -21,12 +21,16 @@ fn set_limits(
     commands.spawn((
         TransformBundle::from_transform(Transform::from_translation(Vec3::new(0.0, window.height(), 0.0))),        
         Collider::cuboid(window.width()/2.0, window.height()/2.0),
+        Friction::coefficient(0.0),
+        Restitution::coefficient(1.0),
         Limit
     ));
 
     commands.spawn((
         TransformBundle::from_transform(Transform::from_translation(Vec3::new(0.0, -window.height(), 0.0))),        
         Collider::cuboid(window.width()/2.0, window.height()/2.0),
+        Friction::coefficient(0.0),
+        Restitution::coefficient(1.0),
         Limit
     ));
 }
