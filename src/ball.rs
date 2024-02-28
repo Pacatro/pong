@@ -5,7 +5,7 @@ use rand::prelude::*;
 use crate::player::Player;
 
 const BALL_RADIUS: f32 = 25.0;
-const INITIAL_BALL_VELOCITY: f32 = 300.0;
+const INITIAL_BALL_VELOCITY: f32 = 550.0;
 
 pub struct BallPlugin;
 
