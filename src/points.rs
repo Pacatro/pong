@@ -20,7 +20,6 @@ fn increase_points(
     mut player_query: Query<&mut Points, With<Player>>,
     rapier_context: Res<RapierContext>,
 ) {
-    
     for ball in ball_query.iter() {
         for goal in goal_query.iter() {
             for mut points in player_query.iter_mut() {
