@@ -2,7 +2,7 @@ mod camera;
 mod player;
 mod ball;
 mod map;
-mod points;
+mod scoreboard;
 
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
@@ -12,7 +12,7 @@ use camera::CameraPlugin;
 use map::MapPlugin;
 use player::PlayersPlugin;
 use ball::BallPlugin;
-use points::PointsPlugin;
+use scoreboard::ScoreBoardPlugin;
 
 fn main() {
     App::new()
@@ -24,6 +24,6 @@ fn main() {
         .add_plugins(MapPlugin)
         .add_plugins(PlayersPlugin)
         .add_plugins(BallPlugin)
-        .add_plugins(PointsPlugin)
+        .add_plugins(ScoreBoardPlugin)
         .run();
 }

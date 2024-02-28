@@ -1,5 +1,7 @@
 use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
+
+use crate::{ball::Ball, map::ScoreLimit};
 // use std::env;
 
 const PLAYER_X_LENGTH: f32 = 20.0;
@@ -20,7 +22,7 @@ impl Plugin for PlayersPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(Startup, spawn_players)
-            .add_systems(Update, player_movement);
+            .add_systems(Update, (player_movement, increase_points));
     }
 }
 
@@ -28,11 +30,11 @@ impl Plugin for PlayersPlugin {
 pub struct Player;
 
 #[derive(Debug, Component)]
-pub struct Points {
+pub struct Score {
     value: u32
 }
 
-impl Points {
+impl Score {
     pub fn new() -> Self {
         Self { value: 0 }
     }
@@ -58,7 +60,7 @@ fn spawn_players(
             transform: Transform::from_translation(PLAYER1_TRANSLATION),
             ..default()
         },
-        Points::new(),
+        Score::new(),
         Player
     ))
         .insert(RigidBody::KinematicVelocityBased)
@@ -76,7 +78,7 @@ fn spawn_players(
             transform: Transform::from_translation(PLAYER2_TRANSLATION),
             ..default()
         },
-        Points::new(),
+        Score::new(),
         Player
     ))
         .insert(RigidBody::KinematicVelocityBased)
@@ -102,6 +104,26 @@ fn player_movement(
         }
     
         controller.translation = Some(movement);
+    }
+}
+
+fn increase_points(
+    mut commands: Commands,
+    ball_query: Query<Entity, With<Ball>>,
+    score_limit_query: Query<Entity, With<ScoreLimit>>,
+    mut player_query: Query<&mut Score, With<Player>>,
+    rapier_context: Res<RapierContext>,
+) {
+    for ball in ball_query.iter() {
+        for score_limit in score_limit_query.iter() {
+            for mut score in player_query.iter_mut() {
+                if rapier_context.intersection_pair(ball, score_limit).is_some() {
+                    score.increase(1);
+                    commands.entity(ball).despawn_recursive();
+                    println!("{score:?}")
+                }
+            }
+        }
     }
 }
 
