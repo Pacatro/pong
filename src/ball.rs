@@ -4,8 +4,11 @@ use rand::prelude::*;
 
 use crate::player::Player;
 
-const BALL_RADIUS: f32 = 25.0;
-const INITIAL_BALL_VELOCITY: f32 = 550.0;
+const BALL_RADIUS: f32 = 20.0;
+const INITIAL_BALL_VELOCITY: f32 = 400.0;
+const DESPAWN_DISTANCE: f32 = 2000.0;
+const INCREASE_FACTOR: f32 = 2.0;
+const INCREASE_PERCENTAGE_FACTOR: f32 = 0.01;
 
 pub struct BallPlugin;
 
@@ -14,7 +17,7 @@ impl Plugin for BallPlugin {
         app
             .add_systems(Startup, spawn_ball)
             .add_systems(PostStartup, move_ball)
-            .add_systems(Update, increase_ball_velocity);
+            .add_systems(Update, (increase_ball_velocity, despawn_ball));
     }
 }
 
@@ -44,8 +47,7 @@ fn spawn_ball(
         .insert(Collider::ball(BALL_RADIUS))
         .insert(GravityScale(0.0))
         .insert(Friction::coefficient(0.0))
-        .insert(Restitution::coefficient(1.0))
-        .insert(ExternalImpulse::default())
+        .insert(Restitution::coefficient(2.0))
         .insert(Ccd::enabled());
 }
 
@@ -63,21 +65,25 @@ fn move_ball(
 
 fn increase_ball_velocity(
     mut query_ball: Query<(Entity, &mut Velocity), With<Ball>>,
-    query_player: Query<Entity, With<Player>>,
+    mut query_player: Query<Entity, With<Player>>,
     rapier_context: Res<RapierContext>,
 ) {
-    let (ball, mut velocity) = query_ball.single_mut();
-    
-    let mut velocity_x: f32 = velocity.linvel.x;
-    let mut velocity_y: f32 = velocity.linvel.y;
-
-    for player in query_player.iter() {
-        if rapier_context.contact_pair(player, ball).is_some() {
-            velocity_x += 100.0;
-            velocity_y += 100.0;
-            velocity.linvel = Vec2::new(velocity_x, velocity_y);
+    for (ball, mut velocity) in query_ball.iter_mut() {
+        for player in query_player.iter_mut() {
+            if rapier_context.contact_pair(player, ball).is_some() {
+                velocity.linvel *= 1.0 + INCREASE_FACTOR * INCREASE_PERCENTAGE_FACTOR;
+            }
         }
     }
+}
 
-    println!("{velocity:?}")
+fn despawn_ball(
+    mut commands: Commands, 
+    ball_query: Query<(Entity, &Transform), With<Ball>>,
+) {
+    for (ball, transform) in ball_query.iter() {
+        if transform.translation.distance(Vec3::ZERO) > DESPAWN_DISTANCE {
+            commands.entity(ball).despawn_recursive();
+        }
+    }
 }
