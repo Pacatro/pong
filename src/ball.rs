@@ -6,7 +6,6 @@ use crate::player::Player;
 
 const BALL_RADIUS: f32 = 20.0;
 const INITIAL_BALL_VELOCITY: f32 = 400.0;
-const DESPAWN_DISTANCE: f32 = 2000.0;
 const INCREASE_FACTOR: f32 = 2.0;
 const INCREASE_PERCENTAGE_FACTOR: f32 = 0.01;
 
@@ -17,7 +16,7 @@ impl Plugin for BallPlugin {
         app
             .add_systems(Startup, spawn_ball)
             .add_systems(PostStartup, move_ball)
-            .add_systems(Update, (increase_ball_velocity, despawn_ball));
+            .add_systems(Update, increase_ball_velocity);
     }
 }
 
@@ -73,17 +72,6 @@ fn increase_ball_velocity(
             if rapier_context.contact_pair(player, ball).is_some() {
                 velocity.linvel *= 1.0 + INCREASE_FACTOR * INCREASE_PERCENTAGE_FACTOR;
             }
-        }
-    }
-}
-
-fn despawn_ball(
-    mut commands: Commands, 
-    ball_query: Query<(Entity, &Transform), With<Ball>>,
-) {
-    for (ball, transform) in ball_query.iter() {
-        if transform.translation.distance(Vec3::ZERO) > DESPAWN_DISTANCE {
-            commands.entity(ball).despawn_recursive();
         }
     }
 }

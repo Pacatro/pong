@@ -21,6 +21,25 @@ impl Plugin for PlayersPlugin {
 #[derive(Debug, Component)]
 pub struct Player;
 
+#[derive(Debug, Component)]
+pub struct Points {
+    value: u32
+}
+
+impl Points {
+    pub fn new() -> Self {
+        Self { value: 0 }
+    }
+
+    pub fn get_value(&self) -> u32 {
+        self.value
+    }
+
+    pub fn increase(&mut self, value: u32) {
+        self.value += value;
+    }
+}
+
 fn spawn_players(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -33,6 +52,7 @@ fn spawn_players(
             transform: Transform::from_translation(PLAYER1_TRANSLATION),
             ..default()
         },
+        Points::new(),
         Player
     ))
         .insert(RigidBody::KinematicVelocityBased)
@@ -50,6 +70,7 @@ fn spawn_players(
             transform: Transform::from_translation(PLAYER2_TRANSLATION),
             ..default()
         },
+        Points::new(),
         Player
     ))
         .insert(RigidBody::KinematicVelocityBased)

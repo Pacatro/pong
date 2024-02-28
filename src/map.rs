@@ -12,7 +12,10 @@ impl Plugin for MapPlugin {
 }
 
 #[derive(Debug, Component)]
-struct Limit;
+pub struct Limit;
+
+#[derive(Debug, Component)]
+pub struct Goal;
 
 fn set_limits(
     mut commands: Commands,
@@ -37,6 +40,21 @@ fn set_limits(
         .insert(Collider::cuboid(window.width()/2.0, window.height()/2.0))
         .insert(Restitution::coefficient(0.0))
         .insert(Friction::coefficient(0.0));
+
+    // GOAL
+    commands.spawn((
+        TransformBundle::from_transform(Transform::from_translation(Vec3::new(window.width()/2.0, 0.0, 0.0))),        
+        Goal
+    ))
+        .insert(Sensor)
+        .insert(Collider::cuboid(1.0, window.height()/2.0));
+
+    commands.spawn((
+        TransformBundle::from_transform(Transform::from_translation(Vec3::new(-(window.width()/2.0), 0.0, 0.0))),        
+        Goal
+    ))
+        .insert(Sensor)
+        .insert(Collider::cuboid(1.0, window.height()/2.0));
 }
 
 fn set_center_line(
