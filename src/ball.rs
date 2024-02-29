@@ -2,11 +2,11 @@ use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 use rand::prelude::*;
 
-use crate::player::Player1;
+use crate::player::{Player1, Player2};
 
 const BALL_RADIUS: f32 = 20.0;
-const INITIAL_BALL_VELOCITY: f32 = 400.0;
-const INCREASE_FACTOR: f32 = 2.0;
+pub const INITIAL_BALL_VELOCITY: f32 = 400.0;
+const INCREASE_FACTOR: f32 = 3.0;
 const INCREASE_PERCENTAGE_FACTOR: f32 = 0.01;
 
 pub struct BallPlugin;
@@ -22,6 +22,14 @@ impl Plugin for BallPlugin {
 
 #[derive(Debug, Component)]
 pub struct Ball;
+
+impl Ball {
+    pub fn get_init_velocity() -> Vec2 {
+        let rand_x: f32 = if rand::thread_rng().gen_range(-1..=1) == 0 { 1.0 } else { -1.0 };
+        let rand_y: f32 = if rand::thread_rng().gen_range(-1..=1) == 0 { 1.0 } else { -1.0 };
+        Vec2::new(rand_x, rand_y).normalize() * INITIAL_BALL_VELOCITY
+    }
+}
 
 fn spawn_ball(
     mut commands: Commands,
@@ -54,24 +62,22 @@ fn move_ball(
     mut query: Query<&mut Velocity, With<Ball>>
 ) {
     let mut velocity = query.single_mut();
-
-    let rand_x: f32 = if rand::thread_rng().gen_range(-1..=1) == 0 { 1.0 } else { -1.0 };
-    let rand_y: f32 = if rand::thread_rng().gen_range(-1..=1) == 0 { 1.0 } else { -1.0 };
-
-    velocity.linvel = Vec2::new(rand_x, rand_y).normalize() * INITIAL_BALL_VELOCITY;
-
+    velocity.linvel = Ball::get_init_velocity();
 }
 
 fn increase_ball_velocity(
     mut query_ball: Query<(Entity, &mut Velocity), With<Ball>>,
-    mut query_player: Query<Entity, With<Player1>>,
+    mut query_player1: Query<Entity, With<Player1>>,
+    mut query_player2: Query<Entity, With<Player2>>,
     rapier_context: Res<RapierContext>,
 ) {
-    for (ball, mut velocity) in query_ball.iter_mut() {
-        for player in query_player.iter_mut() {
-            if rapier_context.contact_pair(player, ball).is_some() {
-                velocity.linvel *= 1.0 + INCREASE_FACTOR * INCREASE_PERCENTAGE_FACTOR;
-            }
-        }
+    let (ball, mut velocity) = query_ball.single_mut();
+    let player1 = query_player1.single();
+    let player2 = query_player2.single();
+    
+    if rapier_context.contact_pair(player1, ball).is_some()
+    || rapier_context.contact_pair(player2, ball).is_some() {
+        velocity.linvel *= 1.0 + INCREASE_FACTOR * INCREASE_PERCENTAGE_FACTOR;
+        println!("{:?}", velocity.linvel)
     }
 }

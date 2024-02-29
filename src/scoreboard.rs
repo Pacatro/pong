@@ -10,7 +10,7 @@ pub struct ScoreBoardPlugin;
 
 impl Plugin for ScoreBoardPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (show_scoreboard));
+        app.add_systems(Update, (show_scoreboard, update_scoreboard));
     }
 }
 
@@ -19,43 +19,51 @@ pub struct ScoreBoard;
 
 fn show_scoreboard(
     mut commands: Commands,
-    score1_query: Query<&Score, (With<Player1>, Without<Player2>)>,
     asset_server: Res<AssetServer>,
 ) {
+    let font = asset_server.load(SCORE_FONT);
+
+    let text_style = TextStyle {
+        font_size: SCOREBOARD_FONT_SIZE,
+        font,
+        color: SCORE_COLOR,
+        ..default()
+    };
+
     commands.spawn((
-        TextBundle::from_sections([
-            TextSection::new(
-                "0",
-                TextStyle {
-                    font_size: SCOREBOARD_FONT_SIZE,
-                    font: asset_server.load(SCORE_FONT),
-                    color: SCORE_COLOR,
-                    ..default()
-                }
-            ),
-            TextSection::new(
-                "1",
-                TextStyle {
-                    font_size: SCOREBOARD_FONT_SIZE,
-                    font: asset_server.load(SCORE_FONT),
-                    color: SCORE_COLOR,
-                    ..default()
-                }
-            )
-        ])
-            .with_text_justify(JustifyText::Center),
+        TextBundle {
+            text: Text::from_sections([
+                TextSection::new("    ", text_style.clone()),
+                TextSection::new("    ", text_style.clone()),
+            ])
+                .with_justify(JustifyText::Center),
+            
+            style: Style {
+                display: Display::Flex,
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                row_gap: Val::Percent(40.0),
+                ..default()
+            },
+
+            transform: Transform::from_translation(Vec3::ZERO),
+            ..default()
+        },
         ScoreBoard,
     ));
+
 }
 
-// fn update_scoreboard(
-//     score1_query: Query<&Score, (With<Player1>, Without<Player2>)>,
-//     score2_query: Query<&Score, (With<Player2>, Without<Player1>)>,
-//     mut query: Query<&mut Text, With<ScoreBoard>>,
-// ) {
-//     let mut text = query.single_mut();
-//     let score1 = score1_query.single();
-//     let score2 = score2_query.single();
+fn update_scoreboard(
+    score1_query: Query<&Score, (With<Player1>, Without<Player2>)>,
+    score2_query: Query<&Score, (With<Player2>, Without<Player1>)>,
+    mut query: Query<&mut Text, With<ScoreBoard>>,
+) {
+    let score1 = score1_query.single();
+    let score2 = score2_query.single();
 
-    
-// }
+    for mut text in query.iter_mut() {
+        text.sections[0].value = score1.get_value().to_string();
+        text.sections[1].value = score2.get_value().to_string();
+    }
+}

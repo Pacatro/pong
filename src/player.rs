@@ -120,7 +120,7 @@ fn player_movement(
 }
 
 fn increase_points(
-    mut ball_query: Query<(Entity, &mut Transform), With<Ball>>,
+    mut ball_query: Query<(Entity, &mut Transform, &mut Velocity), With<Ball>>,
     mut player1_query: Query<&mut Score, (With<Player1>, Without<Player2>)>,
     mut player2_query: Query<&mut Score, (With<Player2>, Without<Player1>)>,
     score_limit1_query: Query<Entity, With<ScoreLimit1>>,
@@ -128,7 +128,7 @@ fn increase_points(
     rapier_context: Res<RapierContext>,
 ) {
 
-    let (ball, mut ball_transform) = ball_query.single_mut();
+    let (ball, mut ball_transform, mut ball_velocity) = ball_query.single_mut();
     
     let mut score1 = player1_query.single_mut();
     let mut score2 = player2_query.single_mut();
@@ -139,11 +139,11 @@ fn increase_points(
     if rapier_context.intersection_pair(ball, score_limit1).is_some() {
         score2.add(1);
         ball_transform.translation = Vec3::new(0.0, 0.0, 0.0);
-        println!("Player 2: {score2:?}")
+        ball_velocity.linvel = Ball::get_init_velocity();
     } else if rapier_context.intersection_pair(ball, score_limit2).is_some() {
         score1.add(1);
         ball_transform.translation = Vec3::new(0.0, 0.0, 0.0);
-        println!("Player 1: {score1:?}")
+        ball_velocity.linvel = Ball::get_init_velocity();
     }
 }
 
