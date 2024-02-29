@@ -2,7 +2,7 @@ use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 use rand::prelude::*;
 
-use crate::player::Player;
+use crate::player::Player1;
 
 const BALL_RADIUS: f32 = 20.0;
 const INITIAL_BALL_VELOCITY: f32 = 400.0;
@@ -64,7 +64,7 @@ fn move_ball(
 
 fn increase_ball_velocity(
     mut query_ball: Query<(Entity, &mut Velocity), With<Ball>>,
-    mut query_player: Query<Entity, With<Player>>,
+    mut query_player: Query<Entity, With<Player1>>,
     rapier_context: Res<RapierContext>,
 ) {
     for (ball, mut velocity) in query_ball.iter_mut() {

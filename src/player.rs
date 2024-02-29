@@ -1,7 +1,7 @@
 use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 
-use crate::{ball::Ball, map::ScoreLimit};
+use crate::{ball::Ball, map::ScoreLimit1};
 // use std::env;
 
 const PLAYER_X_LENGTH: f32 = 20.0;
@@ -27,8 +27,10 @@ impl Plugin for PlayersPlugin {
 }
 
 #[derive(Debug, Component)]
-pub struct Player;
+pub struct Player1;
 
+#[derive(Debug, Component)]
+pub struct Player2;
 #[derive(Debug, Component)]
 pub struct Score {
     value: u32
@@ -61,7 +63,7 @@ fn spawn_players(
             ..default()
         },
         Score::new(),
-        Player
+        Player1
     ))
         .insert(RigidBody::KinematicVelocityBased)
         .insert(Collider::cuboid(PLAYER_X_LENGTH/2.0, PLAYER_Y_LENGTH/2.0))
@@ -79,7 +81,7 @@ fn spawn_players(
             ..default()
         },
         Score::new(),
-        Player
+        Player2
     ))
         .insert(RigidBody::KinematicVelocityBased)
         .insert(Collider::cuboid(PLAYER_X_LENGTH/2.0, PLAYER_Y_LENGTH/2.0))
@@ -90,7 +92,7 @@ fn spawn_players(
 }
 
 fn player_movement(
-    mut query: Query<&mut KinematicCharacterController, With<Player>>,
+    mut query: Query<&mut KinematicCharacterController, With<Player1>>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
     time: Res<Time>
 ) {
@@ -108,18 +110,17 @@ fn player_movement(
 }
 
 fn increase_points(
-    mut commands: Commands,
-    ball_query: Query<Entity, With<Ball>>,
-    score_limit_query: Query<Entity, With<ScoreLimit>>,
-    mut player_query: Query<&mut Score, With<Player>>,
+    mut ball_query: Query<(Entity, &mut Transform), With<Ball>>,
+    score_limit_query: Query<Entity, With<ScoreLimit1>>,
+    mut player_query: Query<&mut Score, With<Player1>>,
     rapier_context: Res<RapierContext>,
 ) {
-    for ball in ball_query.iter() {
+    for (ball, mut ball_transform) in ball_query.iter_mut() {
         for score_limit in score_limit_query.iter() {
             for mut score in player_query.iter_mut() {
                 if rapier_context.intersection_pair(ball, score_limit).is_some() {
                     score.increase(1);
-                    commands.entity(ball).despawn_recursive();
+                    ball_transform.translation = Vec3::new(0.0, 0.0, 0.0);
                     println!("{score:?}")
                 }
             }

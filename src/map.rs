@@ -15,7 +15,10 @@ impl Plugin for MapPlugin {
 pub struct Limit;
 
 #[derive(Debug, Component)]
-pub struct ScoreLimit;
+pub struct ScoreLimit1;
+
+#[derive(Debug, Component)]
+pub struct ScoreLimit2;
 
 fn set_limits(
     mut commands: Commands,
@@ -43,15 +46,15 @@ fn set_limits(
 
     // ScoreLimit
     commands.spawn((
-        TransformBundle::from_transform(Transform::from_translation(Vec3::new(window.width()/2.0, 0.0, 0.0))),        
-        ScoreLimit
+        TransformBundle::from_transform(Transform::from_translation(Vec3::new(-(window.width()/2.0), 0.0, 0.0))),        
+        ScoreLimit1
     ))
         .insert(Sensor)
         .insert(Collider::cuboid(1.0, window.height()/2.0));
 
     commands.spawn((
-        TransformBundle::from_transform(Transform::from_translation(Vec3::new(-(window.width()/2.0), 0.0, 0.0))),        
-        ScoreLimit
+        TransformBundle::from_transform(Transform::from_translation(Vec3::new(window.width()/2.0, 0.0, 0.0))),        
+        ScoreLimit2
     ))
         .insert(Sensor)
         .insert(Collider::cuboid(1.0, window.height()/2.0));

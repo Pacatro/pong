@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::player::{Player, Score};
+use crate::player::{Player1, Score};
 
 pub struct ScoreBoardPlugin;
 
@@ -16,7 +16,7 @@ pub struct ScoreBoard;
 
 fn show_scoreboard(
     mut commands: Commands,
-    query: Query<&Score, With<Player>>,
+    query: Query<&Score, With<Player1>>,
     asset_server: Res<AssetServer>
 ) {
 
@@ -28,7 +28,7 @@ fn show_scoreboard(
                 score.get_value().to_string(),
                 TextStyle {
                     // This font is loaded and will be used instead of the default font.
-                    font: asset_server.load("fonts/Symtext.ttf"),
+                    font: asset_server.load("fonts/I-pixel-u.ttf"),
                     font_size: 100.0,
                     ..default()
                 },
