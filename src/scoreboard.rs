@@ -1,13 +1,16 @@
 use bevy::prelude::*;
 
-use crate::player::{Player1, Score};
+use crate::player::{Player1, Player2, Score};
+
+const SCOREBOARD_FONT_SIZE: f32 = 100.0;
+const SCORE_COLOR: Color = Color::rgb(255.0, 255.0, 255.0);
+const SCORE_FONT: &str = "fonts/I-pixel-u.ttf";
 
 pub struct ScoreBoardPlugin;
 
 impl Plugin for ScoreBoardPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_systems(Update, show_scoreboard);
+        app.add_systems(Update, (show_scoreboard));
     }
 }
 
@@ -16,33 +19,43 @@ pub struct ScoreBoard;
 
 fn show_scoreboard(
     mut commands: Commands,
-    query: Query<&Score, With<Player1>>,
-    asset_server: Res<AssetServer>
+    score1_query: Query<&Score, (With<Player1>, Without<Player2>)>,
+    asset_server: Res<AssetServer>,
 ) {
-
-    for score in query.iter() {
-        commands.spawn((
-            // Create a TextBundle that has a Text with a single section.
-            TextBundle::from_section(
-                // Accepts a `String` or any type that converts into a `String`, such as `&str`
-                score.get_value().to_string(),
+    commands.spawn((
+        TextBundle::from_sections([
+            TextSection::new(
+                "0",
                 TextStyle {
-                    // This font is loaded and will be used instead of the default font.
-                    font: asset_server.load("fonts/I-pixel-u.ttf"),
-                    font_size: 100.0,
+                    font_size: SCOREBOARD_FONT_SIZE,
+                    font: asset_server.load(SCORE_FONT),
+                    color: SCORE_COLOR,
                     ..default()
-                },
-            ) // Set the justification of the Text
-            .with_text_justify(JustifyText::Center)
-            // Set the style of the TextBundle itself.
-            .with_style(Style {
-                position_type: PositionType::Absolute,
-                bottom: Val::Px(5.0),
-                right: Val::Px(5.0),
-                ..default()
-            }),
-            ScoreBoard,
-        ));
-    }
+                }
+            ),
+            TextSection::new(
+                "1",
+                TextStyle {
+                    font_size: SCOREBOARD_FONT_SIZE,
+                    font: asset_server.load(SCORE_FONT),
+                    color: SCORE_COLOR,
+                    ..default()
+                }
+            )
+        ])
+            .with_text_justify(JustifyText::Center),
+        ScoreBoard,
+    ));
 }
 
+// fn update_scoreboard(
+//     score1_query: Query<&Score, (With<Player1>, Without<Player2>)>,
+//     score2_query: Query<&Score, (With<Player2>, Without<Player1>)>,
+//     mut query: Query<&mut Text, With<ScoreBoard>>,
+// ) {
+//     let mut text = query.single_mut();
+//     let score1 = score1_query.single();
+//     let score2 = score2_query.single();
+
+    
+// }

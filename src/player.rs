@@ -1,7 +1,7 @@
 use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 
-use crate::{ball::Ball, map::ScoreLimit1};
+use crate::{ball::Ball, map::{ScoreLimit1, ScoreLimit2}};
 // use std::env;
 
 const PLAYER_X_LENGTH: f32 = 20.0;
@@ -45,7 +45,7 @@ impl Score {
         self.value
     }
 
-    pub fn increase(&mut self, value: u32) {
+    pub fn add(&mut self, value: u32) {
         self.value += value;
     }
 }
@@ -92,39 +92,58 @@ fn spawn_players(
 }
 
 fn player_movement(
-    mut query: Query<&mut KinematicCharacterController, With<Player1>>,
+    mut player1_query: Query<&mut KinematicCharacterController, (With<Player1>, Without<Player2>)>,
+    mut player2_query: Query<&mut KinematicCharacterController, (With<Player2>, Without<Player1>)>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
     time: Res<Time>
 ) {
-    for mut controller in query.iter_mut() {
-        let mut movement: Vec2 = Vec2::ZERO;
-    
-        if keyboard_input.pressed(KeyCode::KeyW) || keyboard_input.pressed(KeyCode::ArrowUp) {
-            movement.y += PLAYERS_VELOCITY * time.delta_seconds();
-        } else if keyboard_input.pressed(KeyCode::KeyS) || keyboard_input.pressed(KeyCode::ArrowDown) {
-            movement.y -= PLAYERS_VELOCITY * time.delta_seconds();
-        }
-    
-        controller.translation = Some(movement);
+    let mut player1_controller = player1_query.single_mut();
+    let mut player2_controller = player2_query.single_mut();
+
+    let mut player1_movement: Vec2 = Vec2::ZERO;
+    let mut player2_movement: Vec2 = Vec2::ZERO;
+
+    if keyboard_input.pressed(KeyCode::KeyW) {
+        player1_movement.y += PLAYERS_VELOCITY * time.delta_seconds();
+    } else if keyboard_input.pressed(KeyCode::KeyS) {
+        player1_movement.y -= PLAYERS_VELOCITY * time.delta_seconds();
     }
+
+    if keyboard_input.pressed(KeyCode::ArrowUp) {
+        player2_movement.y += PLAYERS_VELOCITY * time.delta_seconds();
+    } else if keyboard_input.pressed(KeyCode::ArrowDown) {
+        player2_movement.y -= PLAYERS_VELOCITY * time.delta_seconds();
+    }
+
+    player1_controller.translation = Some(player1_movement);
+    player2_controller.translation = Some(player2_movement);
 }
 
 fn increase_points(
     mut ball_query: Query<(Entity, &mut Transform), With<Ball>>,
-    score_limit_query: Query<Entity, With<ScoreLimit1>>,
-    mut player_query: Query<&mut Score, With<Player1>>,
+    mut player1_query: Query<&mut Score, (With<Player1>, Without<Player2>)>,
+    mut player2_query: Query<&mut Score, (With<Player2>, Without<Player1>)>,
+    score_limit1_query: Query<Entity, With<ScoreLimit1>>,
+    score_limit2_query: Query<Entity, With<ScoreLimit2>>,
     rapier_context: Res<RapierContext>,
 ) {
-    for (ball, mut ball_transform) in ball_query.iter_mut() {
-        for score_limit in score_limit_query.iter() {
-            for mut score in player_query.iter_mut() {
-                if rapier_context.intersection_pair(ball, score_limit).is_some() {
-                    score.increase(1);
-                    ball_transform.translation = Vec3::new(0.0, 0.0, 0.0);
-                    println!("{score:?}")
-                }
-            }
-        }
+
+    let (ball, mut ball_transform) = ball_query.single_mut();
+    
+    let mut score1 = player1_query.single_mut();
+    let mut score2 = player2_query.single_mut();
+
+    let score_limit1 = score_limit1_query.single();
+    let score_limit2 = score_limit2_query.single();
+
+    if rapier_context.intersection_pair(ball, score_limit1).is_some() {
+        score2.add(1);
+        ball_transform.translation = Vec3::new(0.0, 0.0, 0.0);
+        println!("Player 2: {score2:?}")
+    } else if rapier_context.intersection_pair(ball, score_limit2).is_some() {
+        score1.add(1);
+        ball_transform.translation = Vec3::new(0.0, 0.0, 0.0);
+        println!("Player 1: {score1:?}")
     }
 }
 
