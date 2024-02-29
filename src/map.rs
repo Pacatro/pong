@@ -26,6 +26,7 @@ fn set_limits(
 ) {
     let window: &Window = query.single();
     
+    // Up limit
     commands.spawn((
         TransformBundle::from_transform(Transform::from_translation(Vec3::new(0.0, window.height(), 0.0))),
         Limit
@@ -35,6 +36,7 @@ fn set_limits(
         .insert(Restitution::coefficient(0.0))
         .insert(Friction::coefficient(0.0));
 
+    // Bottom limit
     commands.spawn((
         TransformBundle::from_transform(Transform::from_translation(Vec3::new(0.0, -window.height(), 0.0))),        
         Limit
@@ -44,7 +46,7 @@ fn set_limits(
         .insert(Restitution::coefficient(0.0))
         .insert(Friction::coefficient(0.0));
 
-    // ScoreLimit
+    // Score limit 1
     commands.spawn((
         TransformBundle::from_transform(Transform::from_translation(Vec3::new(-(window.width()/2.0), 0.0, 0.0))),        
         ScoreLimit1
@@ -52,6 +54,7 @@ fn set_limits(
         .insert(Sensor)
         .insert(Collider::cuboid(1.0, window.height()/2.0));
 
+    // Score limit 2
     commands.spawn((
         TransformBundle::from_transform(Transform::from_translation(Vec3::new(window.width()/2.0, 0.0, 0.0))),        
         ScoreLimit2

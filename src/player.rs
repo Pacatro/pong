@@ -2,19 +2,13 @@ use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 
 use crate::{ball::Ball, map::{ScoreLimit1, ScoreLimit2}};
-// use std::env;
 
 const PLAYER_X_LENGTH: f32 = 20.0;
 const PLAYER_Y_LENGTH: f32 = 100.0;
 const PLAYERS_COLOR: Color = Color::rgb(255.0, 255.0, 255.0);
+const PLAYERS_VELOCITY: f32 = 800.0;
 const PLAYER1_TRANSLATION: Vec3 = Vec3::new(-600.0, 0.0, 0.0);
 const PLAYER2_TRANSLATION: Vec3 = Vec3::new(600.0, 0.0, 0.0);
-
-// fn get_player_velocity() -> f32 {
-//     if env::consts::OS == "windows" { 5.0 } else { 15.0 }
-// }
-
-const PLAYERS_VELOCITY: f32 = 800.0;
 
 pub struct PlayersPlugin;
 

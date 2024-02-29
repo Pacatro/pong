@@ -5,7 +5,7 @@ use rand::prelude::*;
 use crate::player::{Player1, Player2};
 
 const BALL_RADIUS: f32 = 20.0;
-pub const INITIAL_BALL_VELOCITY: f32 = 400.0;
+const INITIAL_BALL_VELOCITY: f32 = 400.0;
 const INCREASE_FACTOR: f32 = 3.0;
 const INCREASE_PERCENTAGE_FACTOR: f32 = 0.01;
 
