@@ -10,7 +10,9 @@ pub struct ScoreBoardPlugin;
 
 impl Plugin for ScoreBoardPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (show_scoreboard, update_scoreboard));
+        app
+            .add_systems(PostStartup, show_scoreboard)
+            .add_systems(Update, update_scoreboard);
     }
 }
 
@@ -33,8 +35,7 @@ fn show_scoreboard(
     commands.spawn((
         TextBundle {
             text: Text::from_sections([
-                TextSection::new("    ", text_style.clone()),
-                TextSection::new("    ", text_style.clone()),
+                TextSection::new("", text_style.clone()),
             ])
                 .with_justify(JustifyText::Center),
             
@@ -63,7 +64,6 @@ fn update_scoreboard(
     let score2 = score2_query.single();
 
     for mut text in query.iter_mut() {
-        text.sections[0].value = score1.get_value().to_string();
-        text.sections[1].value = score2.get_value().to_string();
+        text.sections[0].value = format!("  {} - {}", score1.get_value().to_string(), score2.get_value().to_string());
     }
 }

@@ -4,7 +4,7 @@ mod ball;
 mod map;
 mod scoreboard;
 
-use bevy::prelude::*;
+use bevy::{prelude::*, window::EnabledButtons};
 use bevy_rapier2d::prelude::*;
 // use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
@@ -16,7 +16,16 @@ use scoreboard::ScoreBoardPlugin;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                enabled_buttons: EnabledButtons {
+                    maximize: false,
+                    ..default()
+                },
+                ..default()
+            }),
+            ..default()
+        }))
         // .add_plugins(WorldInspectorPlugin::new())
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugins(RapierDebugRenderPlugin::default())

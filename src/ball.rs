@@ -67,8 +67,8 @@ fn move_ball(
 
 fn increase_ball_velocity(
     mut query_ball: Query<(Entity, &mut Velocity), With<Ball>>,
-    mut query_player1: Query<Entity, With<Player1>>,
-    mut query_player2: Query<Entity, With<Player2>>,
+    query_player1: Query<Entity, With<Player1>>,
+    query_player2: Query<Entity, With<Player2>>,
     rapier_context: Res<RapierContext>,
 ) {
     let (ball, mut velocity) = query_ball.single_mut();

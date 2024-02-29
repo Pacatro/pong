@@ -103,12 +103,14 @@ fn player_movement(
     let mut player1_movement: Vec2 = Vec2::ZERO;
     let mut player2_movement: Vec2 = Vec2::ZERO;
 
+    // Player 1 movement
     if keyboard_input.pressed(KeyCode::KeyW) {
         player1_movement.y += PLAYERS_VELOCITY * time.delta_seconds();
     } else if keyboard_input.pressed(KeyCode::KeyS) {
         player1_movement.y -= PLAYERS_VELOCITY * time.delta_seconds();
     }
 
+    // Player 2 movement
     if keyboard_input.pressed(KeyCode::ArrowUp) {
         player2_movement.y += PLAYERS_VELOCITY * time.delta_seconds();
     } else if keyboard_input.pressed(KeyCode::ArrowDown) {
@@ -127,7 +129,6 @@ fn increase_points(
     score_limit2_query: Query<Entity, With<ScoreLimit2>>,
     rapier_context: Res<RapierContext>,
 ) {
-
     let (ball, mut ball_transform, mut ball_velocity) = ball_query.single_mut();
     
     let mut score1 = player1_query.single_mut();
@@ -146,9 +147,3 @@ fn increase_points(
         ball_velocity.linvel = Ball::get_init_velocity();
     }
 }
-
-// fn player_info(controllers: Query<(Entity, &KinematicCharacterControllerOutput), With<Player>>) {
-//     for (entity, output) in controllers.iter() {
-//         println!("Entity {:?}: {:?}", entity, output.effective_translation);
-//     }
-// }
