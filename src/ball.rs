@@ -2,7 +2,7 @@ use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 use rand::prelude::*;
 
-use crate::player::{Player1, Player2};
+use crate::{GameState, player::{Player1, Player2}};
 
 const BALL_RADIUS: f32 = 20.0;
 const INITIAL_BALL_VELOCITY: f32 = 400.0;
@@ -14,9 +14,9 @@ pub struct BallPlugin;
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, spawn_ball)
-            .add_systems(PostStartup, move_ball)
-            .add_systems(Update, increase_ball_velocity);
+            .add_systems(OnEnter(GameState::InGame), (spawn_ball, move_ball).chain())
+            // .add_systems(PostStartup, move_ball.run_if(in_state(GameState::InGame)))
+            .add_systems(Update, increase_ball_velocity.run_if(in_state(GameState::InGame)));
     }
 }
 

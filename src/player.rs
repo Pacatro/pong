@@ -1,7 +1,7 @@
 use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 
-use crate::{ball::Ball, map::{ScoreLimit1, ScoreLimit2}};
+use crate::{ball::Ball, GameState, map::{ScoreLimit1, ScoreLimit2}};
 
 const PLAYER_X_LENGTH: f32 = 20.0;
 const PLAYER_Y_LENGTH: f32 = 100.0;
@@ -15,8 +15,11 @@ pub struct PlayersPlugin;
 impl Plugin for PlayersPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, spawn_players)
-            .add_systems(Update, (player_movement, increase_points));
+            .add_systems(OnEnter(GameState::InGame), spawn_players)
+            .add_systems(
+                Update,
+                 (player_movement, increase_points).run_if(in_state(GameState::InGame))
+            );
     }
 }
 

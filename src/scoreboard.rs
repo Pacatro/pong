@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::player::{Player1, Player2, Score};
+use crate::{GameState, player::{Player1, Player2, Score}};
 
 const SCOREBOARD_FONT_SIZE: f32 = 100.0;
 const SCORE_COLOR: Color = Color::rgb(255.0, 255.0, 255.0);
@@ -11,15 +11,15 @@ pub struct ScoreBoardPlugin;
 impl Plugin for ScoreBoardPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(PostStartup, show_scoreboard)
-            .add_systems(Update, update_scoreboard);
+            .add_systems(OnEnter(GameState::InGame), spawn_scoreboard)
+            .add_systems(Update, update_scoreboard.run_if(in_state(GameState::InGame)));
     }
 }
 
 #[derive(Debug, Component)]
 pub struct ScoreBoard;
 
-fn show_scoreboard(
+fn spawn_scoreboard(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
 ) {

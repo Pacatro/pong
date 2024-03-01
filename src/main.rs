@@ -3,7 +3,7 @@ mod player;
 mod ball;
 mod map;
 mod scoreboard;
-mod game_states;
+mod pause;
 
 use bevy::{prelude::*, window::EnabledButtons};
 use bevy_rapier2d::prelude::*;
@@ -14,6 +14,15 @@ use map::MapPlugin;
 use player::PlayersPlugin;
 use ball::BallPlugin;
 use scoreboard::ScoreBoardPlugin;
+use pause::PausePlugin;
+
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
+pub enum GameState {
+    Menu,
+    #[default]
+    InGame,
+    Pause,
+}
 
 fn main() {
     App::new()
@@ -27,10 +36,12 @@ fn main() {
             }),
             ..default()
         }))
+        .init_state::<GameState>()
         // .add_plugins(WorldInspectorPlugin::new())
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugins(RapierDebugRenderPlugin::default())
         .add_plugins(CameraPlugin)
+        .add_plugins(PausePlugin)
         .add_plugins(MapPlugin)
         .add_plugins(PlayersPlugin)
         .add_plugins(BallPlugin)
