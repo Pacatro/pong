@@ -18,7 +18,7 @@ use pause::PausePlugin;
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum GameState {
-    Menu,
+    Menu, // TODO: SET AS DEFAULT STATE
     #[default]
     InGame,
     Pause,

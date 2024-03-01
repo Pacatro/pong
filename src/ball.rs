@@ -14,8 +14,8 @@ pub struct BallPlugin;
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(OnEnter(GameState::InGame), (spawn_ball, move_ball).chain())
-            // .add_systems(PostStartup, move_ball.run_if(in_state(GameState::InGame)))
+            .add_systems(Startup, spawn_ball)
+            .add_systems(PostStartup, move_ball)
             .add_systems(Update, increase_ball_velocity.run_if(in_state(GameState::InGame)));
     }
 }
@@ -59,10 +59,16 @@ fn spawn_ball(
 }
 
 fn move_ball(
-    mut query: Query<&mut Velocity, With<Ball>>
+    mut query: Query<&mut Velocity, With<Ball>>,
+    game_state: Res<State<GameState>>
 ) {
-    let mut velocity = query.single_mut();
-    velocity.linvel = Ball::get_init_velocity();
+    println!("{:?}", game_state);
+    if game_state.is_changed() {
+        println!("{:?}", game_state);
+        let mut velocity = query.single_mut();
+        velocity.linvel = Ball::get_init_velocity();
+        println!("{velocity:?}")
+    }
 }
 
 fn increase_ball_velocity(
