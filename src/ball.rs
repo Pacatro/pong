@@ -78,6 +78,5 @@ fn increase_ball_velocity(
     if rapier_context.contact_pair(player1, ball).is_some()
     || rapier_context.contact_pair(player2, ball).is_some() {
         velocity.linvel *= 1.0 + INCREASE_FACTOR * INCREASE_PERCENTAGE_FACTOR;
-        println!("{:?}", velocity.linvel)
     }
 }

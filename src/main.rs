@@ -3,6 +3,7 @@ mod player;
 mod ball;
 mod map;
 mod scoreboard;
+mod game_states;
 
 use bevy::{prelude::*, window::EnabledButtons};
 use bevy_rapier2d::prelude::*;
