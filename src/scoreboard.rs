@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::{GameState, player::{Player1, Player2, Score}};
 
 const SCOREBOARD_FONT_SIZE: f32 = 100.0;
-const SCORE_COLOR: Color = Color::rgb(255.0, 255.0, 255.0);
+const SCORE_COLOR: Color = Color::WHITE;
 const SCORE_FONT: &str = "fonts/I-pixel-u.ttf";
 
 pub struct ScoreBoardPlugin;
@@ -34,19 +34,13 @@ fn spawn_scoreboard(
 
     commands.spawn((
         TextBundle {
-            text: Text::from_sections([
-                TextSection::new("", text_style.clone()),
-            ])
+            text: Text::from_section(
+                "", 
+                text_style.clone()
+            )
                 .with_justify(JustifyText::Center),
             
-            style: Style {
-                display: Display::Flex,
-                justify_content: JustifyContent::Center,
-                align_items: AlignItems::Center,
-                row_gap: Val::Percent(40.0),
-                ..default()
-            },
-
+            style: Style::default(),
             transform: Transform::from_translation(Vec3::ZERO),
             ..default()
         },
@@ -64,6 +58,6 @@ fn update_scoreboard(
     let score2 = score2_query.single();
 
     for mut text in query.iter_mut() {
-        text.sections[0].value = format!("  {} - {}", score1.get_value().to_string(), score2.get_value().to_string());
+        text.sections[0].value = format!("{} - {}", score1.get_value().to_string(), score2.get_value().to_string());
     }
 }

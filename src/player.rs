@@ -5,7 +5,7 @@ use crate::{ball::Ball, GameState, map::{ScoreLimit1, ScoreLimit2}};
 
 const PLAYER_X_LENGTH: f32 = 20.0;
 const PLAYER_Y_LENGTH: f32 = 100.0;
-const PLAYERS_COLOR: Color = Color::rgb(255.0, 255.0, 255.0);
+const PLAYERS_COLOR: Color = Color::WHITE;
 const PLAYERS_VELOCITY: f32 = 800.0;
 const PLAYER1_TRANSLATION: Vec3 = Vec3::new(-600.0, 0.0, 0.0);
 const PLAYER2_TRANSLATION: Vec3 = Vec3::new(600.0, 0.0, 0.0);

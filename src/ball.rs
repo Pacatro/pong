@@ -5,6 +5,7 @@ use rand::prelude::*;
 use crate::{GameState, player::{Player1, Player2}};
 
 const BALL_RADIUS: f32 = 20.0;
+const BALL_COLOR: Color = Color::WHITE;
 const INITIAL_BALL_VELOCITY: f32 = 400.0;
 const INCREASE_FACTOR: f32 = 3.0;
 const INCREASE_PERCENTAGE_FACTOR: f32 = 0.01;
@@ -39,7 +40,7 @@ fn spawn_ball(
     commands.spawn((
         MaterialMesh2dBundle {
             mesh: Mesh2dHandle(meshes.add(Circle::new(BALL_RADIUS))),
-            material: materials.add(Color::rgb(255.0, 87.0, 51.0)),
+            material: materials.add(BALL_COLOR),
             transform: Transform::from_translation(Vec3::ZERO),
             ..default()
         },
@@ -60,15 +61,9 @@ fn spawn_ball(
 
 fn move_ball(
     mut query: Query<&mut Velocity, With<Ball>>,
-    game_state: Res<State<GameState>>
 ) {
-    println!("{:?}", game_state);
-    if game_state.is_changed() {
-        println!("{:?}", game_state);
-        let mut velocity = query.single_mut();
-        velocity.linvel = Ball::get_init_velocity();
-        println!("{velocity:?}")
-    }
+    let mut velocity = query.single_mut();
+    velocity.linvel = Ball::get_init_velocity();
 }
 
 fn increase_ball_velocity(
