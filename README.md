@@ -19,3 +19,8 @@ Run the game
 ```terminal
 cargo run
 ```
+
+## Libraries used
+
+- [Bevy](https://bevyengine.org/)
+- [Rapier](https://rapier.rs/)
