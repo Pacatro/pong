@@ -65,7 +65,6 @@ fn spawn_scoreboard(
 
         ScoreBoardP2,
     ));
-
 }
 
 fn update_scoreboard(
