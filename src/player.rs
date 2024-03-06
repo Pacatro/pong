@@ -84,6 +84,7 @@ fn spawn_players(
         .insert(Collider::cuboid(PLAYER_X_LENGTH/2.0, PLAYER_Y_LENGTH/2.0))
         .insert(Friction::coefficient(0.0))
         .insert(Restitution::coefficient(0.0))
+        .insert(Velocity::zero())
         .insert(Ccd::enabled())
         .insert(KinematicCharacterController::default());
 }
