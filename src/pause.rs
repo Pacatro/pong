@@ -39,6 +39,7 @@ fn set_in_game(
     }
 }
 
+// TODO: Change this to a normal text
 fn spawn_pause_menu(
     mut commands: Commands,
     asset_server: Res<AssetServer>,

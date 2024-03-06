@@ -1,7 +1,7 @@
 use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 
-const LINE_COLOR: Color = Color::rgb(255.0, 255.0, 255.0);
+const LINE_COLOR: Color = Color::WHITE;
 
 pub struct MapPlugin;
 

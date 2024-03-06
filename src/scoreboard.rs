@@ -3,9 +3,9 @@ use bevy::prelude::*;
 use crate::{GameState, player::{Player1, Player2, Score}};
 
 const SCOREBOARD_FONT_SIZE: f32 = 100.0;
+const DISTANCE_BETWEEN_SCOREBOARDS: f32 = 500.0;
 const SCORE_COLOR: Color = Color::WHITE;
 const SCORE_FONT: &str = "fonts/I-pixel-u.ttf";
-const DISTANCE_BETWEEN_SCOREBOARDS: f32 = 500.0;
 
 pub struct ScoreBoardPlugin;
 
