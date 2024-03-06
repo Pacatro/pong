@@ -26,8 +26,8 @@ pub struct Ball;
 
 impl Ball {
     pub fn get_init_velocity() -> Vec2 {
-        let rand_x: f32 = if rand::thread_rng().gen_range(-1..=1) == 0 { 1.0 } else { -1.0 };
-        let rand_y: f32 = if rand::thread_rng().gen_range(-1..=1) == 0 { 1.0 } else { -1.0 };
+        let rand_x: f32 = if rand::thread_rng().gen_bool(0.5) { 1.0 } else { -1.0 };
+        let rand_y: f32 = if rand::thread_rng().gen_bool(0.5) { 1.0 } else { -1.0 };
         Vec2::new(rand_x, rand_y).normalize() * INITIAL_BALL_VELOCITY
     }
 }
