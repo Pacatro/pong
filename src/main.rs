@@ -25,16 +25,19 @@ pub enum GameState {
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins.set(WindowPlugin {
-            primary_window: Some(Window {
-                enabled_buttons: EnabledButtons {
-                    maximize: false,
+        .add_plugins(DefaultPlugins.set(
+            WindowPlugin {
+                primary_window: Some(Window {
+                    enabled_buttons: EnabledButtons {
+                        maximize: false,
+                        minimize: false,
+                        ..default()
+                    },
                     ..default()
-                },
+                }),
                 ..default()
-            }),
-            ..default()
-        }))
+            }
+        ))
         .init_state::<GameState>()
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         // .add_plugins(RapierDebugRenderPlugin::default()) // * FOR DEBUGGING PHYSICS
