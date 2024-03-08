@@ -40,8 +40,8 @@ fn main() {
         ))
         .init_state::<GameState>()
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-        // .add_plugins(RapierDebugRenderPlugin::default()) // * FOR DEBUGGING PHYSICS
-        // .add_plugins(WorldInspectorPlugin::new()) // * FOR DEBUGGING INSPECTOR
+        // .add_plugins(RapierDebugRenderPlugin::default()) //* FOR DEBUGGING PHYSICS
+        // .add_plugins(WorldInspectorPlugin::new()) //* FOR DEBUGGING INSPECTOR
         .add_plugins(CameraPlugin)
         .add_plugins(PausePlugin)
         .add_plugins(MapPlugin)
