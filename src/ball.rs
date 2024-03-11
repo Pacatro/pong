@@ -15,8 +15,8 @@ pub struct BallPlugin;
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, spawn_ball)
-            .add_systems(PostStartup, move_ball)
+            .add_systems(OnEnter(GameState::InGame), spawn_ball)
+            .add_systems(OnEnter(GameState::InGame), move_ball.after(spawn_ball))
             .add_systems(Update, increase_ball_velocity.run_if(in_state(GameState::InGame)));
     }
 }
@@ -35,7 +35,8 @@ impl Ball {
 fn spawn_ball(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>
+    mut materials: ResMut<Assets<ColorMaterial>>,
+    game_state: ResMut<State<GameState>>,
 ) {
     commands.spawn((
         MaterialMesh2dBundle {

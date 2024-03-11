@@ -15,7 +15,7 @@ pub struct PlayersPlugin;
 impl Plugin for PlayersPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, spawn_players)
+            .add_systems(OnEnter(GameState::InGame), spawn_players)
             .add_systems(
                 Update,
                  (player_movement, increase_points).run_if(in_state(GameState::InGame))

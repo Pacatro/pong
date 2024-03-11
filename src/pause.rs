@@ -9,7 +9,7 @@ pub struct PausePlugin;
 impl Plugin for PausePlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Update, set_pause)
+            .add_systems(Update, set_pause.run_if(in_state(GameState::InGame)))
             .add_systems(OnEnter(GameState::Pause), spawn_pause_menu)
             .add_systems(Update, set_in_game.run_if(in_state(GameState::Pause)))
             .add_systems(OnExit(GameState::Pause), delete_pause_menu);
