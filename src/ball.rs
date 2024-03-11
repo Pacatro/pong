@@ -44,10 +44,7 @@ fn spawn_ball(
             transform: Transform::from_translation(Vec3::ZERO),
             ..default()
         },
-        KinematicCharacterController {
-            offset: CharacterLength::Absolute(0.01),
-            ..default()
-        },
+        KinematicCharacterController::default(),
         Ball
     ))
         .insert(RigidBody::Dynamic)
