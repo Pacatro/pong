@@ -35,6 +35,7 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
         align_items: AlignItems::Center,
         ..default()
     };
+
     let button_icon_style = Style {
         width: Val::Px(30.0),
         // This takes the icons out of the flexbox flow, to be positioned exactly
@@ -43,6 +44,7 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
         left: Val::Px(10.0),
         ..default()
     };
+
     let button_text_style = TextStyle {
         font_size: 40.0,
         color: TEXT_COLOR,
@@ -69,8 +71,11 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                     style: Style {
                         flex_direction: FlexDirection::Column,
                         align_items: AlignItems::Center,
+                        width: Val::Percent(100.0),
+                        height: Val::Percent(100.0),
                         ..default()
                     },
+                    background_color: Color::BLACK.into(),
                     ..default()
                 })
                 .with_children(|parent| {
