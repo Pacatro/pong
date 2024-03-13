@@ -182,12 +182,13 @@ fn menu_action(
                 MenuButtonAction::Quit => {
                     app_exit_events.send(AppExit);
                 }
+                
                 MenuButtonAction::Play => {
                     game_state.set(GameState::InGame);
                     commands.entity(main_menu).despawn_recursive();
                 }
-                // TODO: MenuButtonAction::Multiplayer => menu_state.set(GameState::Multiplayer),
-                MenuButtonAction::Multiplayer => game_state.set(GameState::InGame),
+                
+                MenuButtonAction::Multiplayer => return, // TODO
             }
         }
     }

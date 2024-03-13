@@ -23,7 +23,7 @@ pub enum GameState {
     #[default]
     MainMenu,
     InGame,
-    // TODO: Multiplayer
+    Multiplayer, // TODO
     Pause,
 }
 
