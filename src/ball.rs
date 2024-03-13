@@ -15,8 +15,7 @@ pub struct BallPlugin;
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(OnEnter(GameState::InGame), spawn_ball)
-            .add_systems(PostStartup, move_ball.run_if(in_state(GameState::InGame)))
+            .add_systems(OnExit(GameState::MainMenu), (spawn_ball, move_ball).chain())
             .add_systems(Update, increase_ball_velocity.run_if(in_state(GameState::InGame)));
     }
 }
