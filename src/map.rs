@@ -1,13 +1,15 @@
 use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 
+use crate::GameState;
+
 const LINE_COLOR: Color = Color::WHITE;
 
 pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (set_limits, set_center_line));
+        app.add_systems(OnExit(GameState::MainMenu), (set_limits, set_center_line));
     }
 }
 
