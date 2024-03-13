@@ -28,7 +28,7 @@ enum MenuButtonAction {
 fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
     // Common style for all buttons on the screen
     let button_style = Style {
-        width: Val::Px(250.0),
+        width: Val::Px(260.0),
         height: Val::Px(65.0),
         margin: UiRect::all(Val::Px(20.0)),
         justify_content: JustifyContent::Center,
@@ -48,6 +48,7 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
     let button_text_style = TextStyle {
         font_size: 40.0,
         color: TEXT_COLOR,
+        font: asset_server.load("fonts/I-pixel-u.ttf"),
         ..default()
     };
 
@@ -86,6 +87,7 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                             TextStyle {
                                 font_size: 80.0,
                                 color: TITLE_COLOR,
+                                font: asset_server.load("fonts/I-pixel-u.ttf"),
                                 ..default()
                             },
                         )
@@ -116,7 +118,7 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                                 ..default()
                             });
                             parent
-                                .spawn(TextBundle::from_section("Play", button_text_style.clone()));
+                                .spawn(TextBundle::from_section("PLAY", button_text_style.clone()));
                         });
                     parent
                         .spawn((
@@ -135,7 +137,7 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                                 ..default()
                             });
                             parent.spawn(TextBundle::from_section(
-                                "Multiplayer",
+                                "MULTIPAYER",
                                 button_text_style.clone(),
                             ));
                         });
@@ -155,7 +157,7 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                                 image: UiImage::new(icon),
                                 ..default()
                             });
-                            parent.spawn(TextBundle::from_section("Quit", button_text_style));
+                            parent.spawn(TextBundle::from_section("QUIT", button_text_style));
                         });
                 });
         });
