@@ -15,12 +15,11 @@ pub struct BallPlugin;
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, (spawn_ball, move_ball.run_if(in_state(GameState::InGame))).chain())
+            .add_systems(OnEnter(GameState::InGame), spawn_ball)
+            .add_systems(PostStartup, move_ball.run_if(in_state(GameState::InGame)))
             .add_systems(Update, increase_ball_velocity.run_if(in_state(GameState::InGame)));
     }
 }
-
-// TODO: Pasar la velocidad de la pelota como un recurso??????
 
 #[derive(Debug, Component)]
 pub struct Ball;
@@ -38,6 +37,7 @@ fn spawn_ball(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
+    println!("hola");
     commands.spawn((
         MaterialMesh2dBundle {
             mesh: Mesh2dHandle(meshes.add(Circle::new(BALL_RADIUS))),
