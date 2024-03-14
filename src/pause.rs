@@ -1,5 +1,8 @@
 use bevy::{app::AppExit, prelude::*};
 
+use crate::map::{Limit, ScoreLimit1, ScoreLimit2};
+use crate::player::{Player1, Player2};
+use crate::scoreboard::{ScoreBoardP1, ScoreBoardP2};
 use crate::GameState;
 use crate::ball::Ball;
 
@@ -194,7 +197,31 @@ fn menu_action(
 // TODO
 fn reset_game(
     mut commands: Commands,
-    ball_query: Query<Entity, With<Ball>>
+    ball_query: Query<Entity, With<Ball>>,
+    player1_query: Query<Entity, With<Player1>>,
+    player2_query: Query<Entity, With<Player2>>,
+    limit_query: Query<Entity, With<Limit>>,
+    score_limit1_query: Query<Entity, With<ScoreLimit1>>,
+    score_limit2_query: Query<Entity, With<ScoreLimit2>>,
+    scoreboard1_query: Query<Entity, With<ScoreBoardP1>>,
+    scoreboard2_query: Query<Entity, With<ScoreBoardP2>>,
 ) {
+    for limit in limit_query.iter() {
+        let ball = ball_query.single();
+        let player1 = player1_query.single();
+        let player2 = player2_query.single();
+        let score_limit1 = score_limit1_query.single();
+        let score_limit2 = score_limit2_query.single();
+        let scoreboard1 = scoreboard1_query.single();
+        let scoreboard2 = scoreboard2_query.single();
 
+        commands.entity(limit).despawn_recursive();
+        commands.entity(ball).despawn_recursive();
+        commands.entity(player1).despawn_recursive();
+        commands.entity(player2).despawn_recursive();
+        commands.entity(score_limit1).despawn_recursive();
+        commands.entity(score_limit2).despawn_recursive();
+        commands.entity(scoreboard1).despawn_recursive();
+        commands.entity(scoreboard2).despawn_recursive();
+    }
 }
