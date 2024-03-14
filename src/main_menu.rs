@@ -36,15 +36,6 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
         ..default()
     };
 
-    let button_icon_style = Style {
-        width: Val::Px(30.0),
-        // This takes the icons out of the flexbox flow, to be positioned exactly
-        position_type: PositionType::Absolute,
-        // The icon will be close to the left border of the button
-        left: Val::Px(10.0),
-        ..default()
-    };
-
     let button_text_style = TextStyle {
         font_size: 40.0,
         color: TEXT_COLOR,
@@ -111,12 +102,6 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                             MenuButtonAction::Play,
                         ))
                         .with_children(|parent| {
-                            let icon = asset_server.load("game_icons/right.png");
-                            parent.spawn(ImageBundle {
-                                style: button_icon_style.clone(),
-                                image: UiImage::new(icon),
-                                ..default()
-                            });
                             parent
                                 .spawn(TextBundle::from_section("PLAY", button_text_style.clone()));
                         });
@@ -130,12 +115,6 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                             MenuButtonAction::Multiplayer,
                         ))
                         .with_children(|parent| {
-                            let icon = asset_server.load("game_icons/wrench.png");
-                            parent.spawn(ImageBundle {
-                                style: button_icon_style.clone(),
-                                image: UiImage::new(icon),
-                                ..default()
-                            });
                             parent.spawn(TextBundle::from_section(
                                 "MULTIPAYER",
                                 button_text_style.clone(),
@@ -151,12 +130,6 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                             MenuButtonAction::Quit,
                         ))
                         .with_children(|parent| {
-                            let icon = asset_server.load("game_icons/exitRight.png");
-                            parent.spawn(ImageBundle {
-                                style: button_icon_style,
-                                image: UiImage::new(icon),
-                                ..default()
-                            });
                             parent.spawn(TextBundle::from_section("QUIT", button_text_style));
                         });
                 });

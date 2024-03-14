@@ -42,11 +42,71 @@ fn set_in_pause(
 fn set_in_game(
     mut game_state: ResMut<NextState<GameState>>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
-    mut time: ResMut<Time<Virtual>>
 ) {
     if keyboard_input.pressed(KeyCode::Space) {
-        time.unpause();
         game_state.set(GameState::InGame);
+    }
+}
+
+fn delete_pause_menu(
+    mut commands: Commands,
+    query: Query<Entity, With<PauseMenu>>,
+    mut time: ResMut<Time<Virtual>>,
+) {
+    let menu = query.single();
+    commands.entity(menu).despawn_recursive();
+    time.unpause();
+}
+
+fn menu_action(
+    interaction_query: Query<
+        (&Interaction, &PauseButtonAction),
+        (Changed<Interaction>, With<Button>),
+    >,
+    mut app_exit_events: EventWriter<AppExit>,
+    mut game_state: ResMut<NextState<GameState>>,
+    mut commands: Commands,
+    ball_query: Query<Entity, With<Ball>>,
+    player1_query: Query<Entity, With<Player1>>,
+    player2_query: Query<Entity, With<Player2>>,
+    limit_query: Query<Entity, With<Limit>>,
+    score_limit1_query: Query<Entity, With<ScoreLimit1>>,
+    score_limit2_query: Query<Entity, With<ScoreLimit2>>,
+    scoreboard1_query: Query<Entity, With<ScoreBoardP1>>,
+    scoreboard2_query: Query<Entity, With<ScoreBoardP2>>,
+) {
+    for (interaction, menu_button_action) in &interaction_query {
+        if *interaction == Interaction::Pressed {
+            match menu_button_action {
+                PauseButtonAction::Quit => {
+                    app_exit_events.send(AppExit);
+                }
+
+                PauseButtonAction::GotoMainMenu => {
+                    game_state.set(GameState::MainMenu);
+                
+                    for limit in limit_query.iter() {
+                        commands.entity(limit).despawn_recursive();
+                    }
+                
+                    let ball = ball_query.single();
+                    let player1 = player1_query.single();
+                    let player2 = player2_query.single();
+                    let score_limit1 = score_limit1_query.single();
+                    let score_limit2 = score_limit2_query.single();
+                    let scoreboard1 = scoreboard1_query.single();
+                    let scoreboard2 = scoreboard2_query.single();
+                
+                    commands.entity(ball).despawn_recursive();
+                    commands.entity(player1).despawn_recursive();
+                    commands.entity(player2).despawn_recursive();
+                    commands.entity(score_limit1).despawn_recursive();
+                    commands.entity(score_limit2).despawn_recursive();
+                    commands.entity(scoreboard1).despawn_recursive();
+                    commands.entity(scoreboard2).despawn_recursive();
+                }
+            }
+        }
     }
 }
 
@@ -161,67 +221,4 @@ fn spawn_pause_menu(
                         });
                 });
         });
-}
-
-fn delete_pause_menu(
-    mut commands: Commands,
-    query: Query<Entity, With<PauseMenu>>
-) {
-    let menu = query.single();
-    commands.entity(menu).despawn_recursive()
-}
-
-fn menu_action(
-    interaction_query: Query<
-        (&Interaction, &PauseButtonAction),
-        (Changed<Interaction>, With<Button>),
-    >,
-    mut app_exit_events: EventWriter<AppExit>,
-    mut game_state: ResMut<NextState<GameState>>,
-) {
-    for (interaction, menu_button_action) in &interaction_query {
-        if *interaction == Interaction::Pressed {
-            match menu_button_action {
-                PauseButtonAction::Quit => {
-                    app_exit_events.send(AppExit);
-                }
-
-                PauseButtonAction::GotoMainMenu => {
-                    game_state.set(GameState::MainMenu);
-                }
-            }
-        }
-    }
-}
-
-// TODO
-fn reset_game(
-    mut commands: Commands,
-    ball_query: Query<Entity, With<Ball>>,
-    player1_query: Query<Entity, With<Player1>>,
-    player2_query: Query<Entity, With<Player2>>,
-    limit_query: Query<Entity, With<Limit>>,
-    score_limit1_query: Query<Entity, With<ScoreLimit1>>,
-    score_limit2_query: Query<Entity, With<ScoreLimit2>>,
-    scoreboard1_query: Query<Entity, With<ScoreBoardP1>>,
-    scoreboard2_query: Query<Entity, With<ScoreBoardP2>>,
-) {
-    for limit in limit_query.iter() {
-        let ball = ball_query.single();
-        let player1 = player1_query.single();
-        let player2 = player2_query.single();
-        let score_limit1 = score_limit1_query.single();
-        let score_limit2 = score_limit2_query.single();
-        let scoreboard1 = scoreboard1_query.single();
-        let scoreboard2 = scoreboard2_query.single();
-
-        commands.entity(limit).despawn_recursive();
-        commands.entity(ball).despawn_recursive();
-        commands.entity(player1).despawn_recursive();
-        commands.entity(player2).despawn_recursive();
-        commands.entity(score_limit1).despawn_recursive();
-        commands.entity(score_limit2).despawn_recursive();
-        commands.entity(scoreboard1).despawn_recursive();
-        commands.entity(scoreboard2).despawn_recursive();
-    }
 }
