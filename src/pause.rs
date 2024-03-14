@@ -3,7 +3,7 @@ use bevy::{app::AppExit, prelude::*};
 use crate::GameState;
 
 const TEXT_COLOR: Color = Color::WHITE;
-const MENU_BACKGROUND_COLOR: Color = Color::rgb(0.15, 0.15, 0.15);
+const MENU_BACKGROUND_COLOR: Color = Color::rgb(0.01, 0.01, 0.01);
 
 pub struct PausePlugin;
 
