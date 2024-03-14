@@ -26,8 +26,14 @@ pub enum GameState {
     MainMenu,
     Counter,
     InGame,
-    Multiplayer, // TODO
     Pause,
+}
+
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
+pub enum GameModeState {
+    #[default]
+    Offline,
+    Online, // TODO
 }
 
 fn main() {
@@ -46,9 +52,10 @@ fn main() {
             }
         ))
         .init_state::<GameState>()
+        .init_state::<GameModeState>()
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         // .add_plugins(WorldInspectorPlugin::new()) //* FOR DEBUGGING INSPECTOR
-        .add_plugins(RapierDebugRenderPlugin::default()) //* FOR DEBUGGING PHYSICS
+        // .add_plugins(RapierDebugRenderPlugin::default()) //* FOR DEBUGGING PHYSICS
         .add_plugins(MainMenuPlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(PausePlugin)

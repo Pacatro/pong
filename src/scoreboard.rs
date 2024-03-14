@@ -12,7 +12,10 @@ pub struct ScoreBoardPlugin;
 impl Plugin for ScoreBoardPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(OnExit(GameState::MainMenu), spawn_scoreboard.run_if(in_state(GameState::InGame)))
+            .add_systems(
+                OnExit(GameState::Counter),
+                spawn_scoreboards.run_if(in_state(GameState::InGame))
+            )
             .add_systems(Update, update_scoreboard.run_if(in_state(GameState::InGame)));
     }
 }
@@ -23,7 +26,7 @@ pub struct ScoreBoardP1;
 #[derive(Debug, Component)]
 pub struct ScoreBoardP2;
 
-fn spawn_scoreboard(
+fn spawn_scoreboards(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
 ) {

@@ -1,6 +1,6 @@
 use bevy::{app::AppExit, prelude::*};
 
-use crate::GameState;
+use crate::{GameState, GameModeState};
 
 const TITLE_COLOR: Color = Color::WHITE;
 const TEXT_COLOR: Color = Color::BLACK;
@@ -32,6 +32,7 @@ fn menu_action(
     >,
     mut app_exit_events: EventWriter<AppExit>,
     mut game_state: ResMut<NextState<GameState>>,
+    mut gamemode_state: ResMut<NextState<GameModeState>>,
     mut commands: Commands,
     main_menu_query: Query<Entity, With<MainMenu>>
 ) {
@@ -50,14 +51,14 @@ fn menu_action(
                     commands.entity(main_menu).despawn_recursive();
                 }
                 
-                MenuButtonAction::Multiplayer => return, // TODO
+                // TODO
+                MenuButtonAction::Multiplayer => gamemode_state.set(GameModeState::Online),
             }
         }
     }
 }
 
 fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
-    // Common style for all buttons on the screen
     let button_style = Style {
         width: Val::Px(260.0),
         height: Val::Px(65.0),
@@ -119,10 +120,6 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                         }),
                     );
 
-                    // Display three buttons for each action available from the main menu:
-                    // - new game
-                    // - settings
-                    // - quit
                     parent
                         .spawn((
                             ButtonBundle {
