@@ -27,6 +27,6 @@ cargo run
 
 ## TODO
 
+- [x] Add MainMenu button to pause menu (system to restart all the game)
 - [ ] Add counter at start playing
-- [ ] Add MainMenu button to pause menu (system to restart all the game)
 - [ ] Add multiplayer (So far away right now)
