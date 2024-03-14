@@ -1,6 +1,7 @@
 use bevy::{app::AppExit, prelude::*};
 
 use crate::GameState;
+use crate::ball::Ball;
 
 const TEXT_COLOR: Color = Color::WHITE;
 const MENU_BACKGROUND_COLOR: Color = Color::rgb(0.01, 0.01, 0.01);
@@ -22,6 +23,7 @@ pub struct PauseMenu;
 
 #[derive(Component)]
 enum PauseButtonAction {
+    GotoMainMenu,
     Quit,
 }
 
@@ -124,20 +126,35 @@ fn spawn_pause_menu(
                     parent
                         .spawn((
                             ButtonBundle {
-                                style: button_style,
+                                style: button_style.clone(),
+                                image: UiImage::default(),
+                                ..default()
+                            },
+                            PauseButtonAction::GotoMainMenu,
+                        ))
+                        .with_children(|parent| {
+                            parent.spawn(ImageBundle {
+                                style: button_icon_style.clone(),
+                                ..default()
+                            });
+                            parent.spawn(TextBundle::from_section("MAIN MENU", button_text_style.clone()));
+                        });
+
+                    parent
+                        .spawn((
+                            ButtonBundle {
+                                style: button_style.clone(),
                                 image: UiImage::default(),
                                 ..default()
                             },
                             PauseButtonAction::Quit,
                         ))
                         .with_children(|parent| {
-                            let icon = asset_server.load("game_icons/exitRight.png");
                             parent.spawn(ImageBundle {
-                                style: button_icon_style,
-                                image: UiImage::new(icon),
+                                style: button_icon_style.clone(),
                                 ..default()
                             });
-                            parent.spawn(TextBundle::from_section("QUIT", button_text_style));
+                            parent.spawn(TextBundle::from_section("QUIT", button_text_style.clone()));
                         });
                 });
         });
@@ -157,6 +174,7 @@ fn menu_action(
         (Changed<Interaction>, With<Button>),
     >,
     mut app_exit_events: EventWriter<AppExit>,
+    mut game_state: ResMut<NextState<GameState>>,
 ) {
     for (interaction, menu_button_action) in &interaction_query {
         if *interaction == Interaction::Pressed {
@@ -164,7 +182,19 @@ fn menu_action(
                 PauseButtonAction::Quit => {
                     app_exit_events.send(AppExit);
                 }
+
+                PauseButtonAction::GotoMainMenu => {
+                    game_state.set(GameState::MainMenu);
+                }
             }
         }
     }
+}
+
+// TODO
+fn reset_game(
+    mut commands: Commands,
+    ball_query: Query<Entity, With<Ball>>
+) {
+
 }
