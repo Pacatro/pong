@@ -25,6 +25,37 @@ enum MenuButtonAction {
     Quit,
 }
 
+fn menu_action(
+    interaction_query: Query<
+        (&Interaction, &MenuButtonAction),
+        (Changed<Interaction>, With<Button>),
+    >,
+    mut app_exit_events: EventWriter<AppExit>,
+    mut game_state: ResMut<NextState<GameState>>,
+    mut commands: Commands,
+    main_menu_query: Query<Entity, With<MainMenu>>
+) {
+
+    let main_menu = main_menu_query.single();
+
+    for (interaction, menu_button_action) in &interaction_query {
+        if *interaction == Interaction::Pressed {
+            match menu_button_action {
+                MenuButtonAction::Quit => {
+                    app_exit_events.send(AppExit);
+                }
+                
+                MenuButtonAction::Play => {
+                    game_state.set(GameState::Counter);
+                    commands.entity(main_menu).despawn_recursive();
+                }
+                
+                MenuButtonAction::Multiplayer => return, // TODO
+            }
+        }
+    }
+}
+
 fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
     // Common style for all buttons on the screen
     let button_style = Style {
@@ -134,35 +165,4 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                         });
                 });
         });
-}
-
-fn menu_action(
-    interaction_query: Query<
-        (&Interaction, &MenuButtonAction),
-        (Changed<Interaction>, With<Button>),
-    >,
-    mut app_exit_events: EventWriter<AppExit>,
-    mut game_state: ResMut<NextState<GameState>>,
-    mut commands: Commands,
-    main_menu_query: Query<Entity, With<MainMenu>>
-) {
-
-    let main_menu = main_menu_query.single();
-
-    for (interaction, menu_button_action) in &interaction_query {
-        if *interaction == Interaction::Pressed {
-            match menu_button_action {
-                MenuButtonAction::Quit => {
-                    app_exit_events.send(AppExit);
-                }
-                
-                MenuButtonAction::Play => {
-                    game_state.set(GameState::InGame);
-                    commands.entity(main_menu).despawn_recursive();
-                }
-                
-                MenuButtonAction::Multiplayer => return, // TODO
-            }
-        }
-    }
 }

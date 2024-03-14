@@ -5,12 +5,14 @@ mod map;
 mod scoreboard;
 mod pause;
 mod main_menu;
+mod counter;
 
 use bevy::{prelude::*, window::EnabledButtons};
 use bevy_rapier2d::prelude::*;
 // use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 use camera::CameraPlugin;
+use counter::CounterPlugin;
 use main_menu::MainMenuPlugin;
 use map::MapPlugin;
 use player::PlayersPlugin;
@@ -22,6 +24,7 @@ use pause::PausePlugin;
 pub enum GameState {
     #[default]
     MainMenu,
+    Counter,
     InGame,
     Multiplayer, // TODO
     Pause,
@@ -53,5 +56,6 @@ fn main() {
         .add_plugins(PlayersPlugin)
         .add_plugins(BallPlugin)
         .add_plugins(ScoreBoardPlugin)
+        .add_plugins(CounterPlugin)
         .run();
 }
