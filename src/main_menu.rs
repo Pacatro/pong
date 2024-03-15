@@ -48,6 +48,11 @@ fn menu_action(
                 
                 MenuButtonAction::Play => {
                     game_state.set(GameState::Counter);
+
+                    if gamemode_state.is_changed() {
+                        gamemode_state.set(GameModeState::Offline);
+                    }
+                    
                     commands.entity(main_menu).despawn_recursive();
                 }
                 
