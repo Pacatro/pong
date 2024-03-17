@@ -2,7 +2,7 @@ use bevy::{prelude::*, sprite::{MaterialMesh2dBundle, Mesh2dHandle}};
 use bevy_rapier2d::prelude::*;
 use rand::prelude::*;
 
-use crate::{GameState, player::{Player1, Player2}};
+use crate::{GameState, players::{Player1, Player2}};
 
 const BALL_RADIUS: f32 = 20.0;
 const INITIAL_BALL_VELOCITY: f32 = 450.0;

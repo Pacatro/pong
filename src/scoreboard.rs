@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{GameState, player::{Player1, Player2, Score}};
+use crate::{GameState, players::{Player1, Player2, Score}};
 
 const SCOREBOARD_FONT_SIZE: f32 = 100.0;
 const DISTANCE_BETWEEN_SCOREBOARDS: f32 = 500.0;

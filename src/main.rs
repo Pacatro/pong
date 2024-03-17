@@ -1,5 +1,5 @@
 mod camera;
-mod player;
+mod players;
 mod ball;
 mod map;
 mod scoreboard;
@@ -9,13 +9,12 @@ mod counter;
 
 use bevy::{prelude::*, window::EnabledButtons};
 use bevy_rapier2d::prelude::*;
-// use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 use camera::CameraPlugin;
 use counter::CounterPlugin;
 use main_menu::MainMenuPlugin;
 use map::MapPlugin;
-use player::PlayersPlugin;
+use players::PlayersPlugin;
 use ball::BallPlugin;
 use scoreboard::ScoreBoardPlugin;
 use pause::PausePlugin;
@@ -54,7 +53,6 @@ fn main() {
         .init_state::<GameState>()
         .init_state::<GameModeState>()
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-        // .add_plugins(WorldInspectorPlugin::new()) //* FOR DEBUGGING INSPECTOR
         // .add_plugins(RapierDebugRenderPlugin::default()) //* FOR DEBUGGING PHYSICS
         .add_plugins(MainMenuPlugin)
         .add_plugins(CameraPlugin)

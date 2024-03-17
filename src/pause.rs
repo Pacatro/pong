@@ -1,7 +1,7 @@
 use bevy::{app::AppExit, prelude::*};
 
 use crate::map::{Limit, ScoreLimit1, ScoreLimit2};
-use crate::player::{Player1, Player2};
+use crate::players::{Player1, Player2};
 use crate::scoreboard::{ScoreBoardP1, ScoreBoardP2};
 use crate::GameState;
 use crate::ball::Ball;
