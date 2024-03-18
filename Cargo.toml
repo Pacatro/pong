@@ -9,6 +9,7 @@ edition = "2021"
 bevy = "0.13.0"
 bevy_rapier2d = "0.25.0"
 rand = "0.8.5"
+server = { path = "server"}
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]
@@ -20,3 +21,4 @@ opt-level = 3
 
 [workspace]
 resolver = "2" # Important! wgpu/Bevy needs this!
+members = ["server"]

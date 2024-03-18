@@ -19,6 +19,9 @@ use ball::BallPlugin;
 use scoreboard::ScoreBoardPlugin;
 use pause::PausePlugin;
 
+// TODO: MADE SERVER
+// use server; 
+
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum GameState {
     #[default]
