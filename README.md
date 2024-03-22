@@ -27,6 +27,8 @@ cargo run
 
 ## TODO
 
-- [x] Add MainMenu button to pause menu (system to restart all the game)
-- [x] Add counter at start playing
+- [ ] Learn how bevy_renet work
+- [ ] Try to do a login
+- [ ] Implement DB? 🤔
+- [ ] Desing data packcage
 - [ ] Add multiplayer (So far away right now)

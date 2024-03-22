@@ -6,6 +6,7 @@ mod scoreboard;
 mod pause;
 mod main_menu;
 mod counter;
+mod client;
 
 use bevy::{prelude::*, window::EnabledButtons};
 use bevy_rapier2d::prelude::*;
@@ -18,6 +19,7 @@ use players::PlayersPlugin;
 use ball::BallPlugin;
 use scoreboard::ScoreBoardPlugin;
 use pause::PausePlugin;
+use client::ClientPlugin;
 
 // TODO: MADE SERVER
 // use server; 
@@ -65,5 +67,6 @@ fn main() {
         .add_plugins(BallPlugin)
         .add_plugins(ScoreBoardPlugin)
         .add_plugins(CounterPlugin)
+        .add_plugins(ClientPlugin)
         .run();
 }

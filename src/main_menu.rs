@@ -57,7 +57,10 @@ fn menu_action(
                 }
                 
                 // TODO
-                MenuButtonAction::Multiplayer => gamemode_state.set(GameModeState::Online),
+                MenuButtonAction::Multiplayer => {
+                    gamemode_state.set(GameModeState::Online);
+                    println!("ONLINE MODE ON");
+                },
             }
         }
     }
