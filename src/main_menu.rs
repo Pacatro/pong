@@ -149,7 +149,7 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                         ))
                         .with_children(|parent| {
                             parent.spawn(TextBundle::from_section(
-                                "MULTIPAYER",
+                                "MULTIPAYER", // TODO
                                 button_text_style.clone(),
                             ));
                         });
