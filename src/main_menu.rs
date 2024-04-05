@@ -15,13 +15,15 @@ impl Plugin for MainMenuPlugin {
     }
 }
 
+
 #[derive(Component)]
 struct MainMenu;
 
 #[derive(Component)]
 enum MenuButtonAction {
     Play,
-    Multiplayer,
+    // TODO
+    // Multiplayer,
     Quit,
 }
 
@@ -57,7 +59,7 @@ fn menu_action(
                 }
                 
                 // TODO
-                MenuButtonAction::Multiplayer => gamemode_state.set(GameModeState::Online),
+                // MenuButtonAction::Multiplayer => gamemode_state.set(GameModeState::Online),
             }
         }
     }
@@ -86,6 +88,7 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                 style: Style {
                     width: Val::Percent(100.0),
                     height: Val::Percent(100.0),
+                    display: Display::Flex,
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::Center,
                     ..default()
@@ -98,8 +101,10 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
             parent
                 .spawn(NodeBundle {
                     style: Style {
+                        justify_content: JustifyContent::Center,
                         flex_direction: FlexDirection::Column,
                         align_items: AlignItems::Center,
+                        display: Display::Flex,
                         width: Val::Percent(100.0),
                         height: Val::Percent(100.0),
                         ..default()
@@ -138,21 +143,22 @@ fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                             parent
                                 .spawn(TextBundle::from_section("PLAY", button_text_style.clone()));
                         });
-                    parent
-                        .spawn((
-                            ButtonBundle {
-                                style: button_style.clone(),
-                                image: UiImage::default(),
-                                ..default()
-                            },
-                            MenuButtonAction::Multiplayer,
-                        ))
-                        .with_children(|parent| {
-                            parent.spawn(TextBundle::from_section(
-                                "MULTIPAYER", // TODO
-                                button_text_style.clone(),
-                            ));
-                        });
+                    // TODO: Multiplayer
+                    // parent
+                    //     .spawn((
+                    //         ButtonBundle {
+                    //             style: button_style.clone(),
+                    //             image: UiImage::default(),
+                    //             ..default()
+                    //         },
+                    //         MenuButtonAction::Multiplayer,
+                    //     ))
+                    //     .with_children(|parent| {
+                    //         parent.spawn(TextBundle::from_section(
+                    //             "MULTIPAYER",
+                    //             button_text_style.clone(),
+                    //         ));
+                    //     });
                     parent
                         .spawn((
                             ButtonBundle {

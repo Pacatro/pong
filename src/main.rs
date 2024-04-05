@@ -32,7 +32,8 @@ pub enum GameState {
 pub enum GameModeState {
     #[default]
     Offline,
-    Online, // TODO
+    // TODO
+    // Online,
 }
 
 fn main() {
