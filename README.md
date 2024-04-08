@@ -27,8 +27,14 @@ cargo run
 
 ## TODO
 
-- [ ] Learn how bevy_renet work
-- [ ] Try to do a login
-- [ ] Implement DB? 🤔
-- [ ] Desing data packcage
-- [ ] Add multiplayer (So far away right now)
+- [ ] Learn how [lightyear](https://cbournhonesque.github.io/lightyear/book/tutorial/title.html) works
+- [ ] Refactor project organization
+- [ ] Refactor movement system (see lightyear example)
+- [ ] Desing protocol (See lightyear example)
+- [ ] Login
+- [ ] Implement DB for players score table? 🤔
+
+## Important things
+
+- [ ] Input struct for manage the player input
+- [ ] HashMap<PlayerID, Entity>
