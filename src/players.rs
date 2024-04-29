@@ -67,7 +67,6 @@ fn spawn_players(
         .insert(Friction::coefficient(0.0))
         .insert(Restitution::coefficient(0.0))
         .insert(Velocity::zero())
-        .insert(Ccd::enabled())
         .insert(KinematicCharacterController::default());
 
     commands.spawn((
@@ -85,7 +84,6 @@ fn spawn_players(
         .insert(Friction::coefficient(0.0))
         .insert(Restitution::coefficient(0.0))
         .insert(Velocity::zero())
-        .insert(Ccd::enabled())
         .insert(KinematicCharacterController::default());
 }
 
