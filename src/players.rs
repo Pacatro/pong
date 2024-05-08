@@ -28,6 +28,7 @@ pub struct Player1;
 
 #[derive(Debug, Component)]
 pub struct Player2;
+
 #[derive(Debug, Component)]
 pub struct Score {
     value: u32

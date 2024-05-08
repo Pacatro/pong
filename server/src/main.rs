@@ -8,15 +8,17 @@ fn main() {
 
     println!("Server listening on {SERVER_ADDRS}");
 
-    let mut buffer: [u8; 1024] = [0; 1024];
+    let mut buffer = [0; 1024];
 
     loop {
         let (size, source) = socket.recv_from(&mut buffer)
             .expect("Failed to receive data");
         
         let request = String::from_utf8_lossy(&buffer[..size]);
+
+        let data = request.split(';').collect::<Vec<&str>>();
         
-        println!("Received request: {} from {}", request, source);
+        println!("User: {}\nPassword: {}", data[0], data[1]);
 
         let response = "RESPONG";
 

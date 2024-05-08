@@ -7,6 +7,8 @@ mod pause;
 mod main_menu;
 mod counter;
 mod client;
+mod login_menu;
+mod data_pack;
 
 use bevy::{prelude::*, window::EnabledButtons};
 use bevy_rapier2d::prelude::*;
@@ -31,6 +33,7 @@ pub enum GameState {
     Counter,
     InGame,
     Pause,
+    LoginForm,
 }
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]

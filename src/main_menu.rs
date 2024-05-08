@@ -59,6 +59,8 @@ fn menu_action(
                 // TODO
                 MenuButtonAction::Multiplayer => {
                     gamemode_state.set(GameModeState::Online);
+                    game_state.set(GameState::LoginForm);
+                    commands.entity(main_menu).despawn_recursive();
                     println!("ONLINE MODE ON");
                 },
             }
