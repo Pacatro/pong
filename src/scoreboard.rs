@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{GameState, players::{Player1, Player2, Score}};
+use crate::{
+    players::{Player1, Player2, Score},
+    GameState,
+};
 
 const SCOREBOARD_FONT_SIZE: f32 = 100.0;
 const DISTANCE_BETWEEN_SCOREBOARDS: f32 = 500.0;
@@ -11,12 +14,14 @@ pub struct ScoreBoardPlugin;
 
 impl Plugin for ScoreBoardPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_systems(
-                OnExit(GameState::Counter),
-                spawn_scoreboards.run_if(in_state(GameState::InGame))
-            )
-            .add_systems(Update, update_scoreboard.run_if(in_state(GameState::InGame)));
+        app.add_systems(
+            OnExit(GameState::Counter),
+            spawn_scoreboards.run_if(in_state(GameState::InGame)),
+        )
+        .add_systems(
+            Update,
+            update_scoreboard.run_if(in_state(GameState::InGame)),
+        );
     }
 }
 
@@ -26,10 +31,7 @@ pub struct ScoreBoardP1;
 #[derive(Debug, Component)]
 pub struct ScoreBoardP2;
 
-fn spawn_scoreboards(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
+fn spawn_scoreboards(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font = asset_server.load(SCORE_FONT);
 
     let text_style = TextStyle {
@@ -40,32 +42,24 @@ fn spawn_scoreboards(
     };
 
     commands.spawn((
-        TextBundle::from_section(
-            "",
-            text_style.clone(),
-        )
+        TextBundle::from_section("", text_style.clone())
             .with_text_justify(JustifyText::Center)
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 left: Val::Px(DISTANCE_BETWEEN_SCOREBOARDS),
                 ..default()
             }),
-
         ScoreBoardP1,
     ));
 
     commands.spawn((
-        TextBundle::from_section(
-            "",
-            text_style.clone(),
-        )
+        TextBundle::from_section("", text_style.clone())
             .with_text_justify(JustifyText::Center)
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 right: Val::Px(DISTANCE_BETWEEN_SCOREBOARDS),
                 ..default()
             }),
-
         ScoreBoardP2,
     ));
 }

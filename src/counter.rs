@@ -11,13 +11,14 @@ pub struct CounterPlugin;
 
 impl Plugin for CounterPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .insert_resource(CountdownTimer(Timer::from_seconds(1.0, TimerMode::Once)))
+        app.insert_resource(CountdownTimer(Timer::from_seconds(1.0, TimerMode::Once)))
             .add_systems(OnEnter(GameState::Counter), spawn_counter)
             .add_systems(OnExit(GameState::Counter), despawn_counter)
             .add_systems(
                 Update,
-                (update_scoreboard, count_down).chain().run_if(in_state(GameState::Counter))
+                (update_scoreboard, count_down)
+                    .chain()
+                    .run_if(in_state(GameState::Counter)),
             );
     }
 }
@@ -59,22 +60,16 @@ fn update_scoreboard(
 
     if counter.0 > 0 {
         let mut counter_text = counter_text_query.single_mut();
-        counter_text.sections[0].value = format!("{}", counter.0.to_string()); 
+        counter_text.sections[0].value = format!("{}", counter.0.to_string());
     }
 }
 
-fn despawn_counter(
-    mut commands: Commands, 
-    query: Query<Entity, With<Counter>>
-) {
+fn despawn_counter(mut commands: Commands, query: Query<Entity, With<Counter>>) {
     let counter = query.single();
     commands.entity(counter).despawn_recursive();
 }
 
-fn spawn_counter(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
+fn spawn_counter(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font = asset_server.load(COUNTER_FONT);
 
     let text_style = TextStyle {
@@ -84,17 +79,14 @@ fn spawn_counter(
     };
 
     commands.spawn((
-        TextBundle::from_section(
-            "",
-            text_style.clone(),
-        )
-        .with_text_justify(JustifyText::Center)
-        .with_style(Style {
-            position_type: PositionType::Absolute,
-            left: Val::Percent(5.0),
-            ..default()
-        }),
+        TextBundle::from_section("", text_style.clone())
+            .with_text_justify(JustifyText::Center)
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                left: Val::Percent(5.0),
+                ..default()
+            }),
         CounterTimer(INITIAL_COUNTER),
-        Counter
+        Counter,
     ));
 }

@@ -1,6 +1,6 @@
 use bevy::{app::AppExit, prelude::*};
 
-use crate::{GameState, GameModeState};
+use crate::{GameModeState, GameState};
 
 const TITLE_COLOR: Color = Color::WHITE;
 const TEXT_COLOR: Color = Color::BLACK;
@@ -9,12 +9,10 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_systems(OnEnter(GameState::MainMenu), setup_main_menu)
+        app.add_systems(OnEnter(GameState::MainMenu), setup_main_menu)
             .add_systems(Update, menu_action.run_if(in_state(GameState::MainMenu)));
     }
 }
-
 
 #[derive(Component)]
 struct MainMenu;
@@ -36,9 +34,8 @@ fn menu_action(
     mut game_state: ResMut<NextState<GameState>>,
     mut gamemode_state: ResMut<NextState<GameModeState>>,
     mut commands: Commands,
-    main_menu_query: Query<Entity, With<MainMenu>>
+    main_menu_query: Query<Entity, With<MainMenu>>,
 ) {
-
     let main_menu = main_menu_query.single();
 
     for (interaction, menu_button_action) in &interaction_query {
@@ -47,19 +44,17 @@ fn menu_action(
                 MenuButtonAction::Quit => {
                     app_exit_events.send(AppExit);
                 }
-                
+
                 MenuButtonAction::Play => {
                     game_state.set(GameState::Counter);
 
                     if gamemode_state.is_changed() {
                         gamemode_state.set(GameModeState::Offline);
                     }
-                    
+
                     commands.entity(main_menu).despawn_recursive();
-                }
-                
-                // TODO
-                // MenuButtonAction::Multiplayer => gamemode_state.set(GameModeState::Online),
+                } // TODO
+                  // MenuButtonAction::Multiplayer => gamemode_state.set(GameModeState::Online),
             }
         }
     }

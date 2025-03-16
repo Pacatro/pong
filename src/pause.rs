@@ -1,10 +1,10 @@
 use bevy::{app::AppExit, prelude::*};
 
+use crate::ball::Ball;
 use crate::map::{Limit, ScoreLimit1, ScoreLimit2};
 use crate::players::{Player1, Player2};
 use crate::scoreboard::{ScoreBoardP1, ScoreBoardP2};
 use crate::GameState;
-use crate::ball::Ball;
 
 const TEXT_COLOR: Color = Color::WHITE;
 const MENU_BACKGROUND_COLOR: Color = Color::rgb(0.01, 0.01, 0.01);
@@ -13,10 +13,12 @@ pub struct PausePlugin;
 
 impl Plugin for PausePlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_systems(Update, set_in_pause.run_if(in_state(GameState::InGame)))
+        app.add_systems(Update, set_in_pause.run_if(in_state(GameState::InGame)))
             .add_systems(OnEnter(GameState::Pause), spawn_pause_menu)
-            .add_systems(Update, (set_in_game, menu_action).run_if(in_state(GameState::Pause)))
+            .add_systems(
+                Update,
+                (set_in_game, menu_action).run_if(in_state(GameState::Pause)),
+            )
             .add_systems(OnExit(GameState::Pause), delete_pause_menu);
     }
 }
@@ -32,7 +34,7 @@ enum PauseButtonAction {
 
 fn set_in_pause(
     mut game_state: ResMut<NextState<GameState>>,
-    keyboard_input: Res<ButtonInput<KeyCode>>
+    keyboard_input: Res<ButtonInput<KeyCode>>,
 ) {
     if keyboard_input.pressed(KeyCode::Escape) {
         game_state.set(GameState::Pause);
@@ -84,11 +86,11 @@ fn menu_action(
 
                 PauseButtonAction::GotoMainMenu => {
                     game_state.set(GameState::MainMenu);
-                
+
                     for limit in limit_query.iter() {
                         commands.entity(limit).despawn_recursive();
                     }
-                
+
                     let ball = ball_query.single();
                     let player1 = player1_query.single();
                     let player2 = player2_query.single();
@@ -96,7 +98,7 @@ fn menu_action(
                     let score_limit2 = score_limit2_query.single();
                     let scoreboard1 = scoreboard1_query.single();
                     let scoreboard2 = scoreboard2_query.single();
-                
+
                     commands.entity(ball).despawn_recursive();
                     commands.entity(player1).despawn_recursive();
                     commands.entity(player2).despawn_recursive();
@@ -113,7 +115,7 @@ fn menu_action(
 fn spawn_pause_menu(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut time: ResMut<Time<Virtual>>
+    mut time: ResMut<Time<Virtual>>,
 ) {
     time.pause();
 
@@ -200,7 +202,10 @@ fn spawn_pause_menu(
                                 style: button_icon_style.clone(),
                                 ..default()
                             });
-                            parent.spawn(TextBundle::from_section("MAIN MENU", button_text_style.clone()));
+                            parent.spawn(TextBundle::from_section(
+                                "MAIN MENU",
+                                button_text_style.clone(),
+                            ));
                         });
 
                     parent
@@ -217,7 +222,8 @@ fn spawn_pause_menu(
                                 style: button_icon_style.clone(),
                                 ..default()
                             });
-                            parent.spawn(TextBundle::from_section("QUIT", button_text_style.clone()));
+                            parent
+                                .spawn(TextBundle::from_section("QUIT", button_text_style.clone()));
                         });
                 });
         });
