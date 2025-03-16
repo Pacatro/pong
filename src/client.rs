@@ -12,7 +12,7 @@ pub struct ClientPlugin;
 
 impl Plugin for ClientPlugin {
     fn build(&self, app: &mut App) {
-        // app.add_systems(OnEnter(GameModeState::Online), send_msg);
+        app.add_systems(OnEnter(GameModeState::Online), send_msg);
     }
 }
 

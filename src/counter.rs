@@ -59,7 +59,7 @@ fn update_scoreboard(
 
     if counter.0 > 0 {
         let mut counter_text = counter_text_query.single_mut();
-        counter_text.sections[0].value = format!("{}", counter.0.to_string()); 
+        counter_text.sections[0].value = counter.0.to_string(); 
     }
 }
 
